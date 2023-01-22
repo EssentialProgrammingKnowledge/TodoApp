@@ -1,11 +1,13 @@
-﻿namespace TodoAppConsole
+﻿using TodoApp.Core.Entities;
+
+namespace TodoApp.Core.DTO
 {
-    public class Quest
+    public class QuestDto : IBaseDto
     {
         public int Id { get; set; }
         public string Title { get; set; } = "";
         public string Description { get; set; } = "";
-        public QuestStatus Status { get; set; }
+        public string Status { get; set; } = QuestStatus.New.ToString();
         public DateTime Created { get; set; }
         public DateTime? Modified { get; set; }
 

@@ -1,8 +1,7 @@
-﻿namespace TodoAppConsole
+﻿namespace TodoApp.Core.Entities
 {
-    public class Menu
+    public class Menu : BaseEntity
     {
-        public int Id { get; set; }
         public string Name { get; set; } = "";
 
         public override string ToString()

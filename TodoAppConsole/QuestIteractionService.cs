@@ -1,23 +1,22 @@
-﻿namespace TodoAppConsole
+﻿using TodoApp.Core.DTO;
+using TodoApp.Core.Entities;
+
+namespace TodoAppConsole
 {
     public class QuestIteractionService
     {
-        public Quest? CreateQuest()
+        public QuestDto? CreateQuest()
         {
-            var quest = new Quest
-            {
-                Status = QuestStatus.New
-            };
+            var quest = new QuestDto();
             if (!SetTitle(quest))
             {
                 return null;
             }
             SetDescription(quest);
-            quest.Created = DateTime.Now;
             return quest;
         }
 
-        public Quest? ModifiedQuest(Quest quest)
+        public QuestDto? ModifiedQuest(QuestDto quest)
         {
             if (!SetTitle(quest))
             {
@@ -39,8 +38,7 @@
                 return null;
             }
 
-            quest.Status = (QuestStatus)status;
-            quest.Modified = DateTime.Now;
+            quest.Status = ((QuestStatus)status).ToString();
             return quest;
         }
         public int GetQuestId()
@@ -50,7 +48,7 @@
             return id;
         }
 
-        private bool SetTitle(Quest quest)
+        private bool SetTitle(QuestDto quest)
         {
             Console.WriteLine("Enter quest title");
             var title = Console.ReadLine();
@@ -63,7 +61,7 @@
             return true;
         }
 
-        private void SetDescription(Quest quest)
+        private void SetDescription(QuestDto quest)
         {
             Console.WriteLine("Enter quest description");
             quest.Description = Console.ReadLine() ?? "";
