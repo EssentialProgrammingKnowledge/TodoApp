@@ -1,18 +1,8 @@
-﻿using TodoAppConsole;
+﻿using TodoApp.Core;
+using TodoApp.Core.DTO;
+using TodoAppConsole;
 
-static List<Menu> CreateMenus()
-{
-    return new List<Menu>()
-    {
-        new Menu { Id = 1, Name = "Add quest" },
-        new Menu { Id = 2, Name = "Show details" },
-        new Menu { Id = 3, Name = "Update quest" },
-        new Menu { Id = 4, Name = "Show all quests" },
-        new Menu { Id = 5, Name = "Delete quest" },
-        new Menu { Id = 6, Name = "Quit program" },
-    };
-}
-static void ShowMenus(IEnumerable<Menu> menus)
+static void ShowMenus(IEnumerable<MenuDto> menus)
 {
     Console.WriteLine("Please choose menu:");
     foreach (var menu in menus)
@@ -21,11 +11,11 @@ static void ShowMenus(IEnumerable<Menu> menus)
     }
 }
 
-var menuService = new MenuService(CreateMenus());
-var questService = new QuestService();
+var menuService = Extensions.GetMenuService();
+var questService = Extensions.GetQuestService();
 var questInteractionService = new QuestIteractionService();
 
-Quest? GetQuest()
+QuestDto? GetQuest()
 {
     var id = questInteractionService.GetQuestId();
     var quest = questService.GetQuestById(id);
@@ -46,61 +36,61 @@ while (isProgramRunning)
     var consoleKey = Console.ReadKey();
     Console.WriteLine();
 
-    switch (consoleKey.Key)
+    try
     {
-        case ConsoleKey.D1:
-            var quest = questInteractionService.CreateQuest();
+        switch (consoleKey.Key)
+        {
+            case ConsoleKey.D1:
+                var quest = questInteractionService.CreateQuest();
 
-            if (quest is null)
-            {
-                break;
-            }
+                if (quest is null)
+                {
+                    break;
+                }
 
-            questService.AddQuest(quest);
-            Console.WriteLine($"Added quest {quest}");
-            break;
-        case ConsoleKey.D2:
-            quest = GetQuest();
-            if (quest is null)
-            {
+                quest = questService.AddQuest(quest);
+                Console.WriteLine($"Added quest {quest}");
                 break;
-            }
-            Console.WriteLine($"Quest: {quest}");
-            break;
-        case ConsoleKey.D3:
-            quest = GetQuest();
-            if (quest is null)
-            {
+            case ConsoleKey.D2:
+                quest = GetQuest();
+                if (quest is null)
+                {
+                    break;
+                }
+                Console.WriteLine($"Quest: {quest}");
                 break;
-            }
-            questInteractionService.ModifiedQuest(quest);
-            questService.UpdateQuest(quest);
-            Console.WriteLine($"Updated quest {quest}");
-            break;
-        case ConsoleKey.D4:
-            var quests = questService.GetAllQuests();
-            foreach (var questInList in quests)
-            {
-                Console.WriteLine($"Quest: {questInList}");
-            }
-            break;
-        case ConsoleKey.D5:
-            var id = questInteractionService.GetQuestId();
-            var deleted = questService.DeleteQuest(id);
-            if (deleted)
-            {
+            case ConsoleKey.D3:
+                quest = GetQuest();
+                if (quest is null)
+                {
+                    break;
+                }
+                questInteractionService.ModifiedQuest(quest);
+                quest = questService.UpdateQuest(quest);
+                Console.WriteLine($"Updated quest {quest}");
+                break;
+            case ConsoleKey.D4:
+                var quests = questService.GetAllQuests();
+                foreach (var questInList in quests)
+                {
+                    Console.WriteLine($"Quest: {questInList}");
+                }
+                break;
+            case ConsoleKey.D5:
+                var id = questInteractionService.GetQuestId();
+                questService.DeleteQuest(id);
                 Console.WriteLine($"Quest with id: {id} was deleted");
-            }
-            else
-            {
-                Console.WriteLine($"Quest with id {id} was not deleted");
-            }
-            break;
-        case ConsoleKey.D6:
-            isProgramRunning = false;
-            break;
-        default:
-            Console.WriteLine("Entered invalid Key");
-            break;
+                break;
+            case ConsoleKey.D6:
+                isProgramRunning = false;
+                break;
+            default:
+                Console.WriteLine("Entered invalid Key");
+                break;
+        }
+    }
+    catch(Exception exception)
+    {
+        Console.WriteLine(exception.Message);
     }
 }
