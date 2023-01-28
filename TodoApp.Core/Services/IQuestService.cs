@@ -10,6 +10,8 @@ namespace TodoApp.Core.Services
 
         void DeleteQuest(int id);
 
+        QuestDto ChangeQuestStatus(int id, string status);
+
         QuestDto? GetQuestById(int id);
 
         IReadOnlyList<QuestDto> GetAllQuests();
