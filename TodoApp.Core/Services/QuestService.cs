@@ -66,5 +66,19 @@ namespace TodoApp.Core.Services
 
             return dtos;
         }
+
+        public QuestDto ChangeQuestStatus(int id, string status)
+        {
+            var quest = _repository.Get(id);
+
+            if (quest is null)
+            {
+                throw new CustomException($"Quest with id: '{id}' was not found");
+            }
+
+            quest.ChangeStatus(status);
+            _repository.Update(quest);
+            return quest.AsDto();
+        }
     }
 }
