@@ -5,6 +5,7 @@ using TodoApp.Core.Entities;
 using TodoApp.Core.Exceptions;
 using TodoApp.Core.Repositories;
 using TodoApp.Core.Services;
+using TodoApp.UnitTests.Common;
 
 namespace TodoApp.UnitTests.Services
 {
@@ -23,7 +24,7 @@ namespace TodoApp.UnitTests.Services
         [Fact]
         public void should_quest_status()
         {
-            var quest = CreateDefaultQuest();
+            var quest = Fixture.CreateDefaultQuest();
             _repository.Setup(r => r.Get(quest.Id)).Returns(quest);
             var status = QuestStatus.Complete.ToString();
 
@@ -55,7 +56,7 @@ namespace TodoApp.UnitTests.Services
         [InlineData("200")]
         public void given_invalid_status_when_change_quest_status_should_throw_an_exception(string status)
         {
-            var quest = CreateDefaultQuest();
+            var quest = Fixture.CreateDefaultQuest();
             _repository.Setup(r => r.Get(quest.Id)).Returns(quest);
             var expectedException = new CustomException($"There is no Quest status {status}");
 
@@ -66,10 +67,58 @@ namespace TodoApp.UnitTests.Services
             exception.Message.ShouldBe(expectedException.Message);
         }
 
-        public static Quest CreateDefaultQuest(int id = 1, string? title = null, string? description = null, QuestStatus questStatus = QuestStatus.New)
+        [Fact]
+        public void should_update_quest()
         {
-            return new Quest(id, title ?? $"Title#{Guid.NewGuid().ToString("N")}", 
-                description ?? "", questStatus, DateTime.UtcNow);
+            var quest = Fixture.CreateDefaultQuest();
+            _repository.Setup(r => r.Get(quest.Id)).Returns(quest);
+            var dto = new QuestDto { Id = quest.Id, Title = "New Title", Description = "Desc123", Status = QuestStatus.InProgress.ToString() };
+
+            var dtoAfterUpdate = _questService.UpdateQuest(dto);
+
+            _repository.Verify(r => r.Update(quest), times: Times.Once);
+            dtoAfterUpdate.ShouldNotBeNull();
+            dtoAfterUpdate.Title.ShouldBe(dto.Title);
+            dtoAfterUpdate.Description.ShouldBe(dto.Description);
+            dtoAfterUpdate.Status.ShouldBe(dto.Status);
+        }
+
+        [Fact]
+        public void given_invalid_id_when_update_quest_should_throw_an_exception()
+        {
+            var id = 1;
+            var dto = new QuestDto { Id = id };
+
+            var exception = Record.Exception(() => _questService.UpdateQuest(dto));
+
+            exception.ShouldNotBeNull();
+            exception.ShouldBeOfType<CustomException>();
+            exception.Message.ShouldContain("not found");
+            _repository.Verify(r => r.Update(It.IsAny<Quest>()), times: Times.Never);
+        }
+
+        [Fact]
+        public void should_delete_quest()
+        {
+            var quest = Fixture.CreateDefaultQuest();
+            _repository.Setup(r => r.Get(quest.Id)).Returns(quest);
+
+            _questService.DeleteQuest(quest.Id);
+
+            _repository.Verify(r => r.Delete(quest), times: Times.Once);
+        }
+
+        [Fact]
+        public void given_invalid_id_when_delete_quest_should_throw_an_exception()
+        {
+            var id = 1;
+
+            var exception = Record.Exception(() => _questService.DeleteQuest(id));
+
+            exception.ShouldNotBeNull();
+            exception.ShouldBeOfType<CustomException>();
+            exception.Message.ShouldContain("not found");
+            _repository.Verify(r => r.Delete(It.IsAny<Quest>()), times: Times.Never);
         }
 
         private readonly IQuestService _questService;

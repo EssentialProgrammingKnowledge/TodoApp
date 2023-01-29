@@ -34,6 +34,7 @@ namespace TodoApp.Core.Services
             quest.ChangeTitle(dto.Title);
             quest.ChangeDescription(dto.Description);
             quest.ChangeStatus(dto.Status);
+            _repository.Update(quest);
             return quest.AsDto();
         }
 
