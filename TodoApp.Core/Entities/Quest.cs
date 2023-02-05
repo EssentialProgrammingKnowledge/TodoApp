@@ -11,8 +11,8 @@ namespace TodoApp.Core.Entities
         public DateTime? Modified { get; private set; }
 
         public Quest(int id, string title, string description, string status, DateTime created, DateTime? modified = null)
+            : base(id)
         {
-            Id = id;
             ChangeTitle(title);
             ChangeDescription(description);
             ChangeStatus(status);
@@ -21,8 +21,8 @@ namespace TodoApp.Core.Entities
         }
 
         public Quest(int id, string title, string description, QuestStatus status, DateTime created, DateTime? modified = null)
+            : base(id)
         {
-            Id = id;
             ChangeTitle(title);
             ChangeDescription(description);
             Status = status;

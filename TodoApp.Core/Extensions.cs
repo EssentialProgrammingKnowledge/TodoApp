@@ -1,7 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Runtime.CompilerServices;
 using TodoApp.Core.DTO;
-using TodoApp.Core.Entities;
-using TodoApp.Core.Repositories;
 using TodoApp.Core.Services;
 
 [assembly: InternalsVisibleTo("TodoApp.UnitTests")]
@@ -10,15 +9,12 @@ namespace TodoApp.Core
 {
     public static class Extensions
     {
-        public static IMenuService GetMenuService()
+        public static IServiceCollection AddCore(this IServiceCollection services)
         {
-            return new MenuService(CreateMenus());
-        }
-
-        public static IQuestService GetQuestService()
-        {
-            var repository = new Repository<Quest>();
-            return new QuestService(repository);
+            services.AddSingleton<IEnumerable<MenuDto>>(_ => CreateMenus());
+            services.AddSingleton<IMenuService, MenuService>();
+            services.AddScoped<IQuestService, QuestService>();
+            return services;
         }
 
         private static List<MenuDto> CreateMenus()

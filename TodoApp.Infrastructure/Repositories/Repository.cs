@@ -1,6 +1,8 @@
-﻿using TodoApp.Core.Entities;
+﻿using System.Reflection;
+using TodoApp.Core.Entities;
+using TodoApp.Core.Repositories;
 
-namespace TodoApp.Core.Repositories
+namespace TodoApp.Infrastructure.Repositories
 {
     internal sealed class Repository<T> : IRepository<T>
         where T : BaseEntity
@@ -14,14 +16,14 @@ namespace TodoApp.Core.Repositories
 
             if (!containsList)
             {
-                entity.Id = 1;
                 list = new List<T>() { entity };
+                SetId(entity, list);
                 _entities.Add(type.Name, list);
                 return entity.Id;
             }
 
-            entity.Id = list![^1].Id + 1;
-            list.Add(entity);
+            SetId(entity, list!);
+            list!.Add(entity);
             return entity.Id;
         }
 
@@ -36,21 +38,7 @@ namespace TodoApp.Core.Repositories
         {
             var type = typeof(T);
             var containsList = _entities.TryGetValue(type.Name, out var list);
-
-            if (!containsList)
-            {
-                return null;
-            }
-
-            foreach (var item in list!)
-            {
-                if (item.Id == id)
-                {
-                    return item;
-                }
-            }
-
-            return null;
+            return list?.SingleOrDefault(t => t.Id == id);
         }
 
         public IReadOnlyList<T> GetAll()
@@ -62,6 +50,14 @@ namespace TodoApp.Core.Repositories
 
         public void Update(T entity)
         {
+        }
+
+        private static void SetId(T entity, List<T> list)
+        {
+            var type = typeof(T);
+            var field = type?.BaseType?.GetField($"<{nameof(BaseEntity.Id)}>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance);
+            var lastId = list?.LastOrDefault()?.Id ?? 0;
+            field?.SetValue(entity, lastId + 1);
         }
     }
 }

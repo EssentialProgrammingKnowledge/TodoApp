@@ -2,7 +2,7 @@
 
 namespace TodoApp.Core.Repositories
 {
-    internal interface IRepository<T>
+    public interface IRepository<T>
         where T : BaseEntity
     {
         int Add(T entity);
