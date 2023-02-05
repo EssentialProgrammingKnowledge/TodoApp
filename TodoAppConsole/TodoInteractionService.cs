@@ -4,12 +4,12 @@ using TodoApp.Core.Services;
 
 namespace TodoAppConsole
 {
-    internal class QuestIteractionService : IQuestIteractionService
+    internal class TodoInteractionService : ITodoInteractionService
     {
         private readonly IServiceProvider _serviceProvider;
         private IServiceScope? serviceScope;
 
-        public QuestIteractionService(IServiceProvider serviceProvider)
+        public TodoInteractionService(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
