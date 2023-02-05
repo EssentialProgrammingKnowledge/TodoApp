@@ -1,70 +1,93 @@
-﻿using TodoApp.Core.DTO;
-using TodoApp.Core.Entities;
+﻿using Microsoft.Extensions.DependencyInjection;
+using TodoApp.Core.DTO;
+using TodoApp.Core.Services;
 
 namespace TodoAppConsole
 {
-    public class QuestIteractionService
+    internal class QuestIteractionService : IQuestIteractionService
     {
-        public QuestDto? CreateQuest()
+        private readonly IServiceProvider _serviceProvider;
+        private IServiceScope? serviceScope;
+
+        public QuestIteractionService(IServiceProvider serviceProvider)
         {
-            var quest = new QuestDto();
-            if (!SetTitle(quest))
-            {
-                return null;
-            }
-            SetDescription(quest);
-            return quest;
+            _serviceProvider = serviceProvider;
         }
 
-        public QuestDto? ModifiedQuest(QuestDto quest)
+        public void Start()
         {
-            if (!SetTitle(quest))
-            {
-                return null;
-            }
-            SetDescription(quest);
-            Console.WriteLine("Enter quest status: 0 - New, 1 - InProgress, 2 - Complete");
-            var parsed = int.TryParse(Console.ReadLine(), out var status);
-
-            if (!parsed)
-            {
-                Console.WriteLine($"Entered invalid status");
-                return null;
-            }
-
-            if (status > 2 || status < 0)
-            {
-                Console.WriteLine($"Entered invalid status {status}");
-                return null;
-            }
-
-            quest.Status = ((QuestStatus)status).ToString();
-            return quest;
-        }
-        public int GetQuestId()
-        {
-            Console.WriteLine("Please enter quest id");
-            int.TryParse(Console.ReadLine(), out var id);
-            return id;
+            var menuService = _serviceProvider.GetRequiredService<IMenuService>();
+            RunConsoleApp(menuService.GetMenus().ToList());
         }
 
-        private bool SetTitle(QuestDto quest)
+        private void RunConsoleApp(IEnumerable<MenuDto> menus)
         {
-            Console.WriteLine("Enter quest title");
-            var title = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(title))
+            bool isProgramRunning = true;
+            while (isProgramRunning)
             {
-                Console.WriteLine("Title cannot be empty");
-                return false;
+                ShowMenus(menus);
+                var consoleKey = Console.ReadKey();
+                Console.WriteLine();
+
+                try
+                {
+                    InitializeScope();
+                    switch (consoleKey.Key)
+                    {
+                        case ConsoleKey.D1:
+                            var addQuestView = serviceScope!.ServiceProvider.GetRequiredService<AddQuestView>();
+                            addQuestView.View();
+                            break;
+                        case ConsoleKey.D2:
+                            var questView = serviceScope!.ServiceProvider.GetRequiredService<GetQuestView>();
+                            questView.View();
+                            break;
+                        case ConsoleKey.D3:
+                            var updateQuestView = serviceScope!.ServiceProvider.GetRequiredService<UpdateQuestView>();
+                            updateQuestView.View();
+                            break;
+                        case ConsoleKey.D4:
+                            var questsView = serviceScope!.ServiceProvider.GetRequiredService<GetAllQuestsView>();
+                            questsView.View();
+                            break;
+                        case ConsoleKey.D5:
+                            var deleteQuestView = serviceScope!.ServiceProvider.GetRequiredService<DeleteQuestView>();
+                            deleteQuestView.View();
+                            break;
+                        case ConsoleKey.D6:
+                            isProgramRunning = false;
+                            break;
+                        default:
+                            Console.WriteLine("Entered invalid Key");
+                            break;
+                    }
+                    DisposeScope();
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception.Message);
+                }
             }
-            quest.Title = title;
-            return true;
         }
 
-        private void SetDescription(QuestDto quest)
+        private void InitializeScope()
         {
-            Console.WriteLine("Enter quest description");
-            quest.Description = Console.ReadLine() ?? "";
+            serviceScope = _serviceProvider.CreateScope();
+        }
+
+        private void DisposeScope()
+        {
+            serviceScope?.Dispose();
+            serviceScope = null;
+        }
+
+        private static void ShowMenus(IEnumerable<MenuDto> menus)
+        {
+            Console.WriteLine("Please choose menu:");
+            foreach (var menu in menus)
+            {
+                Console.WriteLine(menu);
+            }
         }
     }
 }

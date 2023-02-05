@@ -34,9 +34,8 @@ namespace TodoApp.Core.Mappings
 
         public static Menu AsEntity(this MenuDto menuDto)
         {
-            return new Menu
+            return new Menu(menuDto.Id)
             {
-                Id = menuDto.Id,
                 Name = menuDto.Name
             };
         }

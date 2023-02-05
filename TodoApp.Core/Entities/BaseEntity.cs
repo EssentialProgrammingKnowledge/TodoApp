@@ -2,6 +2,11 @@
 {
     public abstract class BaseEntity
     {
-        public int Id { get; internal set; }
+        public int Id { get; }
+
+        public BaseEntity(int id)
+        {
+            Id = id;
+        }
     }
 }
