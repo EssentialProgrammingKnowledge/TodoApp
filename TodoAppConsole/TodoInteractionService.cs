@@ -61,11 +61,14 @@ namespace TodoAppConsole
                             Console.WriteLine("Entered invalid Key");
                             break;
                     }
-                    DisposeScope();
                 }
                 catch (Exception exception)
                 {
                     Console.WriteLine(exception.Message);
+                }
+                finally
+                {
+                    DisposeScope();
                 }
             }
         }
