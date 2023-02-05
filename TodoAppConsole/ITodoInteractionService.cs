@@ -2,7 +2,7 @@
 
 namespace TodoAppConsole
 {
-    internal interface IQuestIteractionService
+    internal interface ITodoInteractionService
     {
         void Start();
     }

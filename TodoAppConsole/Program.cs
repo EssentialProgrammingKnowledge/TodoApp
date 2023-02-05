@@ -9,19 +9,19 @@ IServiceCollection Setup()
     var serviceCollection = new ServiceCollection();
     serviceCollection.AddCore()
                      .AddInfrastructure()
-                     .AddSingleton<IQuestIteractionService, QuestIteractionService>();
+                     .AddSingleton<ITodoInteractionService, TodoInteractionService>();
     Assembly.GetExecutingAssembly().GetTypes()
         .AsParallel()
         .Where(t => typeof(IConsoleView).IsAssignableFrom(t) && t != typeof(IConsoleView))
         .ToList()
         .ForEach(t =>
         {
-            serviceCollection.AddSingleton(t);
+            serviceCollection.AddScoped(t);
         });
     return serviceCollection;
 }
 
 var serviceCollection = Setup();
 var serviceProvider = serviceCollection.BuildServiceProvider();
-var questInteractionService = serviceProvider.GetRequiredService<IQuestIteractionService>();
-questInteractionService.Start();
+var todoInteractionService = serviceProvider.GetRequiredService<ITodoInteractionService>();
+todoInteractionService.Start();
