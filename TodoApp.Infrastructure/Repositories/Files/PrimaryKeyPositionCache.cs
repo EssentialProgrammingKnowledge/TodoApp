@@ -33,67 +33,48 @@ namespace TodoApp.Infrastructure.Repositories.Files
 
         public async Task AddPosition(int key, int position)
         {
-            var type = typeof(T);
-            var containsList = primaryKeyPositions.TryGetValue(type.Name, out var list);
-
-            if (!containsList)
-            {
-                list = new List<PrimaryKeyPosition>()
-                {
-                    new PrimaryKeyPosition{ Id = key, Position = position }
-                };
-                primaryKeyPositions.Add(type.Name, list);
-                await SerializePrimaryKeyPositions();
-                return;
-            }
-
-            list!.Add(new PrimaryKeyPosition { Id = key, Position = position });
+            var list = GetList();
+            list.Add(new PrimaryKeyPosition{ Id = key, Position = position });
             await SerializePrimaryKeyPositions();
         }
 
         public int GetPosition(int key)
         {
-            var type = typeof(T);
-            var containsList = primaryKeyPositions.TryGetValue(type.Name, out var list);
-
-            if (!containsList)
-            {
-                return default;
-            }
-
+            var list = GetList();
             return list?.SingleOrDefault(list => list.Id == key)?.Position ?? default;
         }
 
         public int GetLastPosition()
         {
-            var type = typeof(T);
-            var containsList = primaryKeyPositions.TryGetValue(type.Name, out var list);
-
-            if (!containsList)
-            {
-                return default;
-            }
-
+            var list = GetList();
             return list?.LastOrDefault()?.Position ?? default;
         }
 
         public async Task UpdatePositions(IEnumerable<PrimaryKeyPosition> primaryKeys)
+        {
+            var list = GetList();
+
+            if (list.Any())
+            {
+                list.RemoveAll((_) => true);
+            }
+
+            list.AddRange(primaryKeys);
+            await SerializePrimaryKeyPositions();
+
+        }
+
+        private List<PrimaryKeyPosition> GetList() 
         {
             var type = typeof(T);
             var containsList = primaryKeyPositions.TryGetValue(type.Name, out var list);
 
             if (!containsList)
             {
-                list = new List<PrimaryKeyPosition>(primaryKeys);
+                list = new List<PrimaryKeyPosition>();
                 primaryKeyPositions.Add(type.Name, list);
-                await SerializePrimaryKeyPositions();
-                return;
             }
-
-            list!.RemoveAll((_) => true);
-            list!.AddRange(primaryKeys);
-            await SerializePrimaryKeyPositions();
-
+            return list!;
         }
 
         private async Task SerializePrimaryKeyPositions()

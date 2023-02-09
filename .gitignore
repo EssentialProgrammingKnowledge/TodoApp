@@ -396,3 +396,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/TodoAppConsole/Quest_key_positions.json
+/TodoAppConsole/Quest_auto_increment.json
+/TodoAppConsole/Quest.json

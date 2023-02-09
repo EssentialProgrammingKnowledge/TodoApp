@@ -48,6 +48,7 @@ namespace TodoApp.Infrastructure.Repositories
         {
             var position = _primaryKeyPositionCache.GetPosition(entity.Id);
             var tempFile = Path.GetTempFileName();
+            // get lines that not contains entity to delete
             var linesToKeep = File.ReadLines(_filePathEntities)
                 .Where((_, index) => index != position - 1)
                 .Select((l, i) =>
@@ -55,9 +56,13 @@ namespace TodoApp.Infrastructure.Repositories
                     var fileEntity = JsonSerializer.Deserialize<FileEntity<T>>(l, _jsonSerializerOptions);
                     return JsonSerializer.Serialize(new FileEntity<T> { Entity = fileEntity.Entity, Position = i + 1 });
                 });
+
+            // write to temp file and delete current then move from temp to current localization
             await File.WriteAllLinesAsync(tempFile, linesToKeep);
             File.Delete(_filePathEntities);
             File.Move(tempFile, _filePathEntities);
+
+            // update primary keys positions in cache
             var primaryKeyPositions = File.ReadLines(_filePathEntities)
                .Select((l, i) =>
                {
@@ -112,6 +117,7 @@ namespace TodoApp.Infrastructure.Repositories
         {
             var position = _primaryKeyPositionCache.GetPosition(entity.Id);
             var tempFile = Path.GetTempFileName();
+            // update line with new values
             var lines = File.ReadLines(_filePathEntities)
                 .Select((line, index) =>
                 {
@@ -125,6 +131,7 @@ namespace TodoApp.Infrastructure.Repositories
                     }
                     return line;
                 });
+            // write to temp file, delete current and move to current localization
             await File.WriteAllLinesAsync(tempFile, lines);
             File.Delete(_filePathEntities);
             File.Move(tempFile, _filePathEntities);
