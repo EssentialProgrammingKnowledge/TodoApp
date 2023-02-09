@@ -16,7 +16,14 @@ namespace TodoApp.Infrastructure.Repositories.Files
                     .Any(c => c.GetParameters().Length == 0);
                 if (!hasParameterlessPublicConstructor)
                 {
-                    // The type doesn't have public constructors
+                    var hasParameterlessPrivateConstructor = jsonTypeInfo.Type.GetConstructors(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic)
+                        .Any(c => c.GetParameters().Length == 0);
+
+                    if (!hasParameterlessPrivateConstructor)
+                    {
+                        throw new InvalidOperationException($"{type.FullName} has no private constructor");
+                    }
+
                     jsonTypeInfo.CreateObject = () =>
                         Activator.CreateInstance(jsonTypeInfo.Type, true);
                 }
