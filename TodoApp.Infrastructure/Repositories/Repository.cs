@@ -9,7 +9,7 @@ namespace TodoApp.Infrastructure.Repositories
     {
         private readonly Dictionary<string, List<T>> _entities = new();
 
-        public int Add(T entity)
+        public Task<int> Add(T entity)
         {
             var type = typeof(T);
             var containsList = _entities.TryGetValue(type.Name, out var list);
@@ -19,37 +19,39 @@ namespace TodoApp.Infrastructure.Repositories
                 list = new List<T>() { entity };
                 SetId(entity, list);
                 _entities.Add(type.Name, list);
-                return entity.Id;
+                return Task.FromResult(entity.Id);
             }
 
             SetId(entity, list!);
             list!.Add(entity);
-            return entity.Id;
+            return Task.FromResult(entity.Id);
         }
 
-        public void Delete(T entity)
+        public Task Delete(T entity)
         {
             var type = typeof(T);
             _entities.TryGetValue(type.Name, out var list);
             list?.Remove(entity);
+            return Task.CompletedTask;
         }
 
-        public T? Get(int id)
+        public Task<T?> Get(int id)
         {
             var type = typeof(T);
             var containsList = _entities.TryGetValue(type.Name, out var list);
-            return list?.SingleOrDefault(t => t.Id == id);
+            return Task.FromResult(list?.SingleOrDefault(t => t.Id == id));
         }
 
-        public IReadOnlyList<T> GetAll()
+        public Task<IReadOnlyList<T>> GetAll()
         {
             var type = typeof(T);
             _entities.TryGetValue(type.Name, out var list);
-            return list ?? new List<T>();
+            return Task.FromResult<IReadOnlyList<T>>(list ?? new List<T>());
         }
 
-        public void Update(T entity)
+        public Task Update(T entity)
         {
+            return Task.CompletedTask;
         }
 
         private static void SetId(T entity, List<T> list)

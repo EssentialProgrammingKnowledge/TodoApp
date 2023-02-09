@@ -21,7 +21,9 @@ IServiceCollection Setup()
     return serviceCollection;
 }
 
+
 var serviceCollection = Setup();
 var serviceProvider = serviceCollection.BuildServiceProvider();
+serviceProvider.UseInfrastructure();
 var todoInteractionService = serviceProvider.GetRequiredService<ITodoInteractionService>();
-todoInteractionService.Start();
+await todoInteractionService.Start();

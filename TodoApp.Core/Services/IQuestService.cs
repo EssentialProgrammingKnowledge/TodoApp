@@ -4,16 +4,16 @@ namespace TodoApp.Core.Services
 {
     public interface IQuestService : IService<QuestDto>
     {
-        QuestDto AddQuest(QuestDto quest);
+        Task<QuestDto> AddQuest(QuestDto quest);
 
-        QuestDto UpdateQuest(QuestDto quest);
+        Task<QuestDto> UpdateQuest(QuestDto quest);
 
-        void DeleteQuest(int id);
+        Task DeleteQuest(int id);
 
-        QuestDto ChangeQuestStatus(int id, string status);
+        Task<QuestDto> ChangeQuestStatus(int id, string status);
 
-        QuestDto? GetQuestById(int id);
+        Task<QuestDto?> GetQuestById(int id);
 
-        IReadOnlyList<QuestDto> GetAllQuests();
+        Task<IReadOnlyList<QuestDto>> GetAllQuests();
     }
 }

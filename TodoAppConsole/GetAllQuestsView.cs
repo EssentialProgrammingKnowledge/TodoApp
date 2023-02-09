@@ -11,9 +11,9 @@ namespace TodoAppConsole
             _questService = questService;
         }
 
-        public void View()
+        public async Task View()
         {
-            var quests = _questService.GetAllQuests();
+            var quests = await _questService.GetAllQuests();
             foreach (var quest in quests)
             {
                 Console.WriteLine(quest);

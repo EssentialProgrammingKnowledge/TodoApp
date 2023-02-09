@@ -11,10 +11,10 @@ namespace TodoAppConsole
             _questService = questService;
         }
 
-        public void View()
+        public async Task View()
         {
             var id = GetQuestId();
-            _questService.DeleteQuest(id);
+            await _questService.DeleteQuest(id);
             Console.WriteLine($"Quest with id: {id} was deleted");
         }
 

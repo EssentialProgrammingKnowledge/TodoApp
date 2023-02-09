@@ -1,9 +1,7 @@
-﻿using TodoApp.Core.DTO;
-
-namespace TodoAppConsole
+﻿namespace TodoAppConsole
 {
     internal interface ITodoInteractionService
     {
-        void Start();
+        Task Start();
     }
 }
