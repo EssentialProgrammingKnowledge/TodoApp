@@ -12,23 +12,23 @@ namespace TodoApp.UnitTests.Services
     public class QuestServiceTests
     {
         [Fact]
-        public void should_add_quest()
+        public async Task should_add_quest()
         {
             var dto = new QuestDto { Title = "Title#1" };
 
-            _questService.AddQuest(dto);
+            await _questService.AddQuest(dto);
 
             _repository.Verify(r => r.Add(It.IsAny<Quest>()), times: Times.Once);
         }
 
         [Fact]
-        public void should_quest_status()
+        public async Task should_quest_status()
         {
             var quest = Fixture.CreateDefaultQuest();
-            _repository.Setup(r => r.Get(quest.Id)).Returns(quest);
+            _repository.Setup(r => r.Get(quest.Id)).ReturnsAsync(quest);
             var status = QuestStatus.Complete.ToString();
 
-            var questAfterUpdate = _questService.ChangeQuestStatus(quest.Id, status);
+            var questAfterUpdate = await _questService.ChangeQuestStatus(quest.Id, status);
 
             questAfterUpdate.ShouldNotBeNull();
             _repository.Verify(r => r.Update(quest));
@@ -36,12 +36,12 @@ namespace TodoApp.UnitTests.Services
         }
 
         [Fact]
-        public void given_invalid_id_when_change_quest_status_should_throw_an_exception()
+        public async Task given_invalid_id_when_change_quest_status_should_throw_an_exception()
         {
             var id = 1;
             var status = "avbc";
 
-            var exception = Record.Exception(() => _questService.ChangeQuestStatus(id, status));
+            var exception = await Record.ExceptionAsync(() => _questService.ChangeQuestStatus(id, status));
 
             exception.ShouldNotBeNull();
             exception.ShouldBeOfType<CustomException>();
@@ -54,13 +54,13 @@ namespace TodoApp.UnitTests.Services
         [InlineData("      ")]
         [InlineData("nie+istnieje")]
         [InlineData("200")]
-        public void given_invalid_status_when_change_quest_status_should_throw_an_exception(string status)
+        public async Task given_invalid_status_when_change_quest_status_should_throw_an_exception(string status)
         {
             var quest = Fixture.CreateDefaultQuest();
-            _repository.Setup(r => r.Get(quest.Id)).Returns(quest);
+            _repository.Setup(r => r.Get(quest.Id)).ReturnsAsync(quest);
             var expectedException = new CustomException($"There is no Quest status {status}");
 
-            var exception = Record.Exception(() => _questService.ChangeQuestStatus(quest.Id, status));
+            var exception = await Record.ExceptionAsync(() => _questService.ChangeQuestStatus(quest.Id, status));
 
             exception.ShouldNotBeNull();
             exception.ShouldBeOfType(expectedException.GetType());
@@ -68,13 +68,13 @@ namespace TodoApp.UnitTests.Services
         }
 
         [Fact]
-        public void should_update_quest()
+        public async Task should_update_quest()
         {
             var quest = Fixture.CreateDefaultQuest();
-            _repository.Setup(r => r.Get(quest.Id)).Returns(quest);
+            _repository.Setup(r => r.Get(quest.Id)).ReturnsAsync(quest);
             var dto = new QuestDto { Id = quest.Id, Title = "New Title", Description = "Desc123", Status = QuestStatus.InProgress.ToString() };
 
-            var dtoAfterUpdate = _questService.UpdateQuest(dto);
+            var dtoAfterUpdate = await _questService.UpdateQuest(dto);
 
             _repository.Verify(r => r.Update(quest), times: Times.Once);
             dtoAfterUpdate.ShouldNotBeNull();
@@ -84,12 +84,12 @@ namespace TodoApp.UnitTests.Services
         }
 
         [Fact]
-        public void given_invalid_id_when_update_quest_should_throw_an_exception()
+        public async Task given_invalid_id_when_update_quest_should_throw_an_exception()
         {
             var id = 1;
             var dto = new QuestDto { Id = id };
 
-            var exception = Record.Exception(() => _questService.UpdateQuest(dto));
+            var exception = await Record.ExceptionAsync(() => _questService.UpdateQuest(dto));
 
             exception.ShouldNotBeNull();
             exception.ShouldBeOfType<CustomException>();
@@ -98,10 +98,10 @@ namespace TodoApp.UnitTests.Services
         }
 
         [Fact]
-        public void should_delete_quest()
+        public async Task should_delete_quest()
         {
             var quest = Fixture.CreateDefaultQuest();
-            _repository.Setup(r => r.Get(quest.Id)).Returns(quest);
+            _repository.Setup(r => r.Get(quest.Id)).ReturnsAsync(quest);
 
             _questService.DeleteQuest(quest.Id);
 
@@ -109,11 +109,11 @@ namespace TodoApp.UnitTests.Services
         }
 
         [Fact]
-        public void given_invalid_id_when_delete_quest_should_throw_an_exception()
+        public async Task given_invalid_id_when_delete_quest_should_throw_an_exception()
         {
             var id = 1;
 
-            var exception = Record.Exception(() => _questService.DeleteQuest(id));
+            var exception = await Record.ExceptionAsync(() => _questService.DeleteQuest(id));
 
             exception.ShouldNotBeNull();
             exception.ShouldBeOfType<CustomException>();
