@@ -6,6 +6,6 @@ namespace TodoApp.Infrastructure.Repositories.Files
     internal interface IPrimaryKeyManager<T>
         where T : BaseEntity
     {
-        Task<int> GetPrimaryKey();
+        Task<int> GetNextPrimaryKey();
     }
 }

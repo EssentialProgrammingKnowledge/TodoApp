@@ -21,7 +21,7 @@ namespace TodoApp.Infrastructure.Repositories.Files
             }
         }
 
-        public async Task<int> GetPrimaryKey()
+        public async Task<int> GetNextPrimaryKey()
         {
             var lastIndex = await GetIndexFromFileAsync();
             using FileStream fileStream = File.Open(_filePath, FileMode.Create, FileAccess.Write);

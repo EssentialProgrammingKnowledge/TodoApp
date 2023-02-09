@@ -34,7 +34,7 @@ namespace TodoApp.Infrastructure.Repositories
 
         public async Task<int> Add(T entity)
         {
-            var id = await _primaryKeyManager.GetPrimaryKey();
+            var id = await _primaryKeyManager.GetNextPrimaryKey();
             SetId(entity, id);
             var lastPosition = _primaryKeyPositionCache.GetLastPosition();
             var nextPosition = lastPosition + 1;
