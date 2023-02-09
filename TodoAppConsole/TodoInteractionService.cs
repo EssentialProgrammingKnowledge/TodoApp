@@ -14,13 +14,13 @@ namespace TodoAppConsole
             _serviceProvider = serviceProvider;
         }
 
-        public void Start()
+        public async Task Start()
         {
             var menuService = _serviceProvider.GetRequiredService<IMenuService>();
-            RunConsoleApp(menuService.GetMenus().ToList());
+            await RunConsoleApp(menuService.GetMenus().ToList());
         }
 
-        private void RunConsoleApp(IEnumerable<MenuDto> menus)
+        private async Task RunConsoleApp(IEnumerable<MenuDto> menus)
         {
             bool isProgramRunning = true;
             while (isProgramRunning)
@@ -36,23 +36,23 @@ namespace TodoAppConsole
                     {
                         case ConsoleKey.D1:
                             var addQuestView = serviceScope!.ServiceProvider.GetRequiredService<AddQuestView>();
-                            addQuestView.View();
+                            await addQuestView.View();
                             break;
                         case ConsoleKey.D2:
                             var questView = serviceScope!.ServiceProvider.GetRequiredService<GetQuestView>();
-                            questView.View();
+                            await questView.View();
                             break;
                         case ConsoleKey.D3:
                             var updateQuestView = serviceScope!.ServiceProvider.GetRequiredService<UpdateQuestView>();
-                            updateQuestView.View();
+                            await updateQuestView.View();
                             break;
                         case ConsoleKey.D4:
                             var questsView = serviceScope!.ServiceProvider.GetRequiredService<GetAllQuestsView>();
-                            questsView.View();
+                            await questsView.View();
                             break;
                         case ConsoleKey.D5:
                             var deleteQuestView = serviceScope!.ServiceProvider.GetRequiredService<DeleteQuestView>();
-                            deleteQuestView.View();
+                            await deleteQuestView.View();
                             break;
                         case ConsoleKey.D6:
                             isProgramRunning = false;

@@ -12,14 +12,14 @@ namespace TodoAppConsole
             _questService = questService;
         }
 
-        public void View()
+        public async Task View()
         {
             var quest = CreateQuest();
             if (quest is null)
             {
                 return;
             }
-            quest = _questService.AddQuest(quest);
+            quest = await _questService.AddQuest(quest);
             Console.WriteLine($"Added quest {quest}");
         }
 

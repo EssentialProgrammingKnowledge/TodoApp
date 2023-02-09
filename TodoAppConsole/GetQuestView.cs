@@ -11,10 +11,10 @@ namespace TodoAppConsole
             _questService = questService;
         }
 
-        public void View()
+        public async Task View()
         {
             var id = GetQuestId();
-            var quest = _questService.GetQuestById(id);
+            var quest = await _questService.GetQuestById(id);
 
             if (quest is null)
             {

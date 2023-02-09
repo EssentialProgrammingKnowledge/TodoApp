@@ -2,6 +2,6 @@
 {
     internal interface IConsoleView
     {
-        void View();
+        Task View();
     }
 }

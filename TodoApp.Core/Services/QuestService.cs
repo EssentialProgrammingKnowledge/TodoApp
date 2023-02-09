@@ -15,16 +15,16 @@ namespace TodoApp.Core.Services
             _repository = repository;
         }
 
-        public QuestDto AddQuest(QuestDto dto)
+        public async Task<QuestDto> AddQuest(QuestDto dto)
         {
             var quest = Quest.Create(dto.Title, dto.Description);
-            _repository.Add(quest);
+            await _repository.Add(quest);
             return quest.AsDto();
         }
 
-        public QuestDto UpdateQuest(QuestDto dto)
+        public async Task<QuestDto> UpdateQuest(QuestDto dto)
         {
-            var quest = _repository.Get(dto.Id);
+            var quest = await _repository.Get(dto.Id);
 
             if (quest is null)
             {
@@ -34,30 +34,30 @@ namespace TodoApp.Core.Services
             quest.ChangeTitle(dto.Title);
             quest.ChangeDescription(dto.Description);
             quest.ChangeStatus(dto.Status);
-            _repository.Update(quest);
+            await _repository.Update(quest);
             return quest.AsDto();
         }
 
-        public void DeleteQuest(int id)
+        public async Task DeleteQuest(int id)
         {
-            var quest = _repository.Get(id);
+            var quest = await _repository.Get(id);
 
             if (quest is null)
             {
                 throw new CustomException($"Quest with id {id} was not found");
             }
 
-            _repository.Delete(quest);
+            await _repository.Delete(quest);
         }
 
-        public QuestDto? GetQuestById(int id)
+        public async Task<QuestDto?> GetQuestById(int id)
         {
-            return _repository.Get(id)?.AsDto();
+            return (await _repository.Get(id))?.AsDto();
         }
 
-        public IReadOnlyList<QuestDto> GetAllQuests()
+        public async Task<IReadOnlyList<QuestDto>> GetAllQuests()
         {
-            var quests = _repository.GetAll();
+            var quests = await _repository.GetAll();
             var dtos = new List<QuestDto>();
 
             foreach (var quest in quests)
@@ -68,9 +68,9 @@ namespace TodoApp.Core.Services
             return dtos;
         }
 
-        public QuestDto ChangeQuestStatus(int id, string status)
+        public async Task<QuestDto> ChangeQuestStatus(int id, string status)
         {
-            var quest = _repository.Get(id);
+            var quest = await _repository.Get(id);
 
             if (quest is null)
             {
@@ -78,7 +78,7 @@ namespace TodoApp.Core.Services
             }
 
             quest.ChangeStatus(status);
-            _repository.Update(quest);
+            await _repository.Update(quest);
             return quest.AsDto();
         }
     }
