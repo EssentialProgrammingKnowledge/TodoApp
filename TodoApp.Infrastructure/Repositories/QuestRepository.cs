@@ -32,7 +32,7 @@ namespace TodoApp.Infrastructure.Repositories
 
         public Task<Quest?> Get(int id)
         {
-            return _dbConnection.QuerySingleOrDefaultAsync<Quest>(
+            return _dbConnection.QuerySingleOrDefaultAsync<Quest?>(
                 """
                 SELECT Id, Title, Description, Status, Created, Modified
                 FROM quests
