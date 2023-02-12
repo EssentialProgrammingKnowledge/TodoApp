@@ -18,8 +18,10 @@ namespace TodoApp.Core.Services
         public async Task<QuestDto> AddQuest(QuestDto dto)
         {
             var quest = Quest.Create(dto.Title, dto.Description);
-            await _repository.Add(quest);
-            return quest.AsDto();
+            var id = await _repository.Add(quest);
+            var questAdded = quest.AsDto();
+            questAdded.Id = id;
+            return questAdded;
         }
 
         public async Task<QuestDto> UpdateQuest(QuestDto dto)

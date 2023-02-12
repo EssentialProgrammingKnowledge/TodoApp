@@ -3,6 +3,7 @@ using System.Data;
 using System.Text.Json;
 using TodoApp.Core;
 using TodoApp.Infrastructure;
+using TodoApp.Infrastructure.Database;
 
 namespace TodoApp.IntegrationTests
 {
