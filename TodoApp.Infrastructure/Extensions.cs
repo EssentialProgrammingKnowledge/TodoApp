@@ -26,7 +26,7 @@ namespace TodoApp.Infrastructure
 
         public static IServiceProvider UseInfrastructure(this IServiceProvider serviceProvider)
         {
-            var dbInitializer = serviceProvider.GetRequiredService<DbInitializer>();
+            var dbInitializer = serviceProvider.GetRequiredService<IDbInitializer>();
             dbInitializer.Start();
             return serviceProvider;
         }
@@ -44,7 +44,7 @@ namespace TodoApp.Infrastructure
                 throw new InvalidOperationException("Check in 'database' section 'connectionString' if is correct");
             }
             services.AddSingleton(databaseOptions);
-            services.AddTransient<DbInitializer>();
+            services.AddTransient<IDbInitializer, DbInitializer>();
 
             if (databaseOptions.AllowMigrations)
             {
