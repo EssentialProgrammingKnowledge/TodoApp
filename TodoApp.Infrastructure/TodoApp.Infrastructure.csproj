@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TodoApp.Core\TodoApp.Core.csproj" />
+    <ProjectReference Include="..\TodoApp.Migrations\TodoApp.Migrations.csproj" />
   </ItemGroup>
 
 </Project>
