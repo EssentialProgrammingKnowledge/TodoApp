@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoApp.UnitTests", "TodoAp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoApp.Infrastructure", "TodoApp.Infrastructure\TodoApp.Infrastructure.csproj", "{F86A9FE0-6438-4519-8EFF-7E300812E6A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoApp.IntegrationTests", "TodoApp.IntegrationTests\TodoApp.IntegrationTests.csproj", "{D5F12A03-C380-4FAD-9E43-6BD503094A6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoApp.IntegrationTests", "TodoApp.IntegrationTests\TodoApp.IntegrationTests.csproj", "{D5F12A03-C380-4FAD-9E43-6BD503094A6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoApp.Migrations", "TodoApp.Migrations\TodoApp.Migrations.csproj", "{C427B619-33CB-4E5E-ABAF-C563C4E8E802}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{D5F12A03-C380-4FAD-9E43-6BD503094A6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5F12A03-C380-4FAD-9E43-6BD503094A6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5F12A03-C380-4FAD-9E43-6BD503094A6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C427B619-33CB-4E5E-ABAF-C563C4E8E802}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C427B619-33CB-4E5E-ABAF-C563C4E8E802}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C427B619-33CB-4E5E-ABAF-C563C4E8E802}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C427B619-33CB-4E5E-ABAF-C563C4E8E802}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

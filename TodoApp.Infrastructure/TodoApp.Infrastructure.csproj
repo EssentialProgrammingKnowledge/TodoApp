@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TodoApp.Core\TodoApp.Core.csproj" />
+    <ProjectReference Include="..\TodoApp.Migrations\TodoApp.Migrations.csproj" />
   </ItemGroup>
 
 </Project>

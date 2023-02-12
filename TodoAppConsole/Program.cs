@@ -5,11 +5,11 @@ using TodoApp.Core;
 using TodoApp.Infrastructure;
 using TodoAppConsole;
 
-IServiceCollection Setup(string connectionString)
+IServiceCollection Setup(Dictionary<string, object> appsettings)
 {
     var serviceCollection = new ServiceCollection();
     serviceCollection.AddCore()
-                     .AddInfrastructure(connectionString)
+                     .AddInfrastructure(appsettings)
                      .AddSingleton<ITodoInteractionService, TodoInteractionService>();
     Assembly.GetExecutingAssembly().GetTypes()
         .AsParallel()
@@ -22,24 +22,18 @@ IServiceCollection Setup(string connectionString)
     return serviceCollection;
 }
 
-async Task<string> GetDbConnection()
+async Task<Dictionary<string, object>> GetAppsettings()
 {
     var appFolder = Directory.GetParent(AppContext.BaseDirectory)?.Parent?.Parent?.Parent?.FullName 
         ?? throw new InvalidOperationException("Cannot get Application folder directory");
     using FileStream fileStream = File.Open(appFolder + Path.DirectorySeparatorChar + "appsettings.json", FileMode.Open, FileAccess.Read);
     var settings = await JsonSerializer.DeserializeAsync<Dictionary<string, object>>(fileStream) 
-            ?? throw new InvalidOperationException("Cannot deserialize appsettings please ensure that this file exists");
-    var connectionString = settings["database"]?.ToString();
-
-    if (string.IsNullOrWhiteSpace(connectionString))
-    {
-        throw new InvalidOperationException("There is no connection string in 'appsettings.json'. Please fill the database section");
-    }
-    return connectionString;
+            ?? throw new InvalidOperationException("Cannot deserialize 'appsettings.json', please ensure that this file exists");
+    return settings;
 }
 
-var connectionString = await GetDbConnection();
-var serviceCollection = Setup(connectionString);
+var appsettings = await GetAppsettings();
+var serviceCollection = Setup(appsettings);
 var serviceProvider = serviceCollection.BuildServiceProvider();
 serviceProvider.UseInfrastructure();
 var todoInteractionService = serviceProvider.GetRequiredService<ITodoInteractionService>();
