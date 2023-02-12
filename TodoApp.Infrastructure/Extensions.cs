@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using MySql.Data.MySqlClient;
+using System.Data;
 using TodoApp.Core.Entities;
 using TodoApp.Core.Repositories;
 using TodoApp.Infrastructure.Repositories;
@@ -8,10 +10,12 @@ namespace TodoApp.Infrastructure
 {
     public static class Extensions
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, string connectionString)
         {
             //services.AddSingleton(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped(typeof(IRepository<>), typeof(JsonFileRepository<>));
+            services.AddScoped<IRepository<Quest>, QuestRepository>();
+            services.AddDbConnection(connectionString);
             services.AddSingleton(typeof(IPrimaryKeyManager<>), typeof(PrimaryKeyManager<>));
             services.AddSingleton(typeof(IPrimaryKeyPositionCache<>), typeof(PrimaryKeyPositionCache<>));
             return services;
@@ -25,7 +29,7 @@ namespace TodoApp.Infrastructure
                                     .IsAssignableFrom(t) && t != typeof(BaseEntity)
                                         && t != typeof(Menu)));
 
-            foreach(var type in types)
+            foreach (var type in types)
             {
                 var primaryKeyMangerType = typeof(IPrimaryKeyManager<>).MakeGenericType(type);
                 var primaryKeyPositionCache = typeof(IPrimaryKeyPositionCache<>).MakeGenericType(type);
@@ -33,6 +37,15 @@ namespace TodoApp.Infrastructure
                 serviceProvider.GetRequiredService(primaryKeyPositionCache);
             }
             return serviceProvider;
+        }
+
+        private static IServiceCollection AddDbConnection(this IServiceCollection services, string connectionString)
+        {
+            services.AddScoped<IDbConnection, MySqlConnection>(sp =>
+            {
+                return new MySqlConnection(connectionString);
+            });
+            return services;
         }
     }
 }
