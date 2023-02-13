@@ -32,20 +32,8 @@ namespace TodoApp.IntegrationTests
         public void Dispose()
         {
             using var scope = ServiceProvider.CreateScope();
-            var connection = scope.ServiceProvider.GetRequiredService<IDbConnection>();
-            connection.Open();
-            using var command = connection.CreateCommand();
-            command.CommandText = $"DROP DATABASE IF EXISTS {connection.Database}";
-            command.ExecuteNonQuery();
-            command.Dispose();
-            connection.Close();
-            connection.Dispose();
-            scope.Dispose();
-            if (ServiceProvider is IDisposable disposable)
-            {
-                disposable.Dispose();
-            }
-            GC.SuppressFinalize(this);
+            using var dbContext = scope.ServiceProvider.GetRequiredService<TodoDbContext>();
+            dbContext.Database.EnsureDeleted();
         }
     }
 }

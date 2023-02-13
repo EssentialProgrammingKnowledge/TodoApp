@@ -1,14 +1,13 @@
-﻿using FluentMigrator.Runner;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using TodoApp.Infrastructure.Database;
 
-namespace TodoApp.IntegrationTests
+namespace TodoApp.Infrastructure.Database
 {
-    internal sealed class DbTestInitializer : IDbInitializer
+    internal class EFDbInitializer : IDbInitializer
     {
         private readonly IServiceProvider _serviceProvider;
 
-        public DbTestInitializer(IServiceProvider serviceProvider)
+        public EFDbInitializer(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
@@ -23,8 +22,8 @@ namespace TodoApp.IntegrationTests
                 return;
             }
 
-            var migrationRunner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
-            migrationRunner.MigrateUp();
+            using var context = scope.ServiceProvider.GetRequiredService<TodoDbContext>();
+            context.Database.Migrate();
         }
     }
 }

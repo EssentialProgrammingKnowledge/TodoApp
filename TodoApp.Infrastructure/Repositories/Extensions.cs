@@ -34,5 +34,11 @@ namespace TodoApp.Infrastructure.Repositories
             services.AddScoped<IRepository<Quest>, DapperQuestRepository>();
             return services;
         }
+
+        public static IServiceCollection AddEFCoreRepositories(this IServiceCollection services)
+        {
+            services.AddScoped<IRepository<Quest>, EFQuestRepository>();
+            return services;
+        }
     }
 }
