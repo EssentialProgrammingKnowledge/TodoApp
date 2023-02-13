@@ -5,11 +5,11 @@ using TodoApp.Core.Repositories;
 
 namespace TodoApp.Infrastructure.Repositories
 {
-    internal class QuestRepository : IRepository<Quest>
+    internal class DapperQuestRepository : IRepository<Quest>
     {
         private readonly IDbConnection _dbConnection;
 
-        public QuestRepository(IDbConnection dbConnection)
+        public DapperQuestRepository(IDbConnection dbConnection)
         {
             _dbConnection = dbConnection;
         }
