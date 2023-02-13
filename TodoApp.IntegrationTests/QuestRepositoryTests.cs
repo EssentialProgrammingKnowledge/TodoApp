@@ -24,18 +24,17 @@ namespace TodoApp.IntegrationTests
         {
             var quest = Quest.Create("Quest#2", "Description123");
             var id = await _repository.Add(quest);
-            var questAdded = new Quest(id, quest.Title, quest.Description, quest.Status, quest.Created, quest.Modified);
-            questAdded.ChangeStatus("Complete");
-            questAdded.ChangeTitle("Title#123");
-            questAdded.ChangeDescription(null);
+            quest.ChangeStatus("Complete");
+            quest.ChangeTitle("Title#123");
+            quest.ChangeDescription(null);
 
-            await _repository.Update(questAdded);
+            await _repository.Update(quest);
 
             var questUpdated = await _repository.Get(id);
             Assert.NotNull(questUpdated);
-            Assert.True(questAdded.Status == questUpdated.Status);
-            Assert.True(questAdded.Title == questUpdated.Title);
-            Assert.True(questAdded.Description == questUpdated.Description);
+            Assert.True(quest.Status == questUpdated.Status);
+            Assert.True(quest.Title == questUpdated.Title);
+            Assert.True(quest.Description == questUpdated.Description);
         }
 
         [Fact]
@@ -44,7 +43,7 @@ namespace TodoApp.IntegrationTests
             var quest = Quest.Create("Quest#3", "Description123");
             var id = await _repository.Add(quest);
 
-            await _repository.Delete(new Quest(id, quest.Title, quest.Description, quest.Status, quest.Created, quest.Modified));
+            await _repository.Delete(quest);
 
             var questDeleted = await _repository.Get(id);
             Assert.Null(questDeleted);
@@ -67,8 +66,7 @@ namespace TodoApp.IntegrationTests
 
         public QuestRepositoryTests(QuestFixture questFixture)
         {
-            using var scope = questFixture.ServiceProvider.CreateScope();
-            _repository = scope.ServiceProvider.GetRequiredService<IRepository<Quest>>();
+            _repository = questFixture.ServiceProvider.GetRequiredService<IRepository<Quest>>();
         }
     }
 }

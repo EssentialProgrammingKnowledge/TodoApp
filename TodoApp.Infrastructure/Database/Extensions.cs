@@ -25,12 +25,11 @@ namespace TodoApp.Infrastructure.Database
             services.AddSingleton(databaseOptions);
             var serverVersion = ServerVersion.AutoDetect(databaseOptions.ConnectionString);
             services.AddDbContext<TodoDbContext>(options => options.UseMySql(databaseOptions.ConnectionString, serverVersion));
-            services.AddDapperRepositories();
+            services.AddEFCoreRepositories();
 
             if (databaseOptions.AllowMigrations)
             {
-                services.AddTransient<IDbInitializer, DefaultDbInitializer>();
-                services.AddMigrations(databaseOptions.ConnectionString);
+                services.AddTransient<IDbInitializer, EFDbInitializer>();
             }
 
             return services;
