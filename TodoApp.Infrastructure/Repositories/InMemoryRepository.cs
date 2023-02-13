@@ -4,7 +4,7 @@ using TodoApp.Core.Repositories;
 
 namespace TodoApp.Infrastructure.Repositories
 {
-    internal sealed class Repository<T> : IRepository<T>
+    internal sealed class InMemoryRepository<T> : IRepository<T>
         where T : BaseEntity
     {
         private readonly Dictionary<string, List<T>> _entities = new();

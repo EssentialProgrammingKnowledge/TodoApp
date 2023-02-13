@@ -1,6 +1,5 @@
 ﻿using FluentMigrator.Runner;
 using Microsoft.Extensions.DependencyInjection;
-using TodoApp.Infrastructure;
 using TodoApp.Infrastructure.Database;
 
 namespace TodoApp.IntegrationTests

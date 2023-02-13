@@ -4,11 +4,11 @@ using MySql.Data.MySqlClient;
 
 namespace TodoApp.Infrastructure.Database
 {
-    internal sealed class DbInitializer : IDbInitializer
+    internal sealed class DefaultDbInitializer : IDbInitializer
     {
         private readonly IServiceProvider _serviceProvider;
 
-        public DbInitializer(IServiceProvider serviceProvider)
+        public DefaultDbInitializer(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
