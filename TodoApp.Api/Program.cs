@@ -19,5 +19,7 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapGet("/api/hc", () => "TodoApp!");
+app.MapPost("/api/hc", (int id) => Results.Ok($"Resource Added {id}"));
 
 app.Run();
