@@ -16,7 +16,7 @@ builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.Configure<AppOptions>(builder.Configuration.GetSection("app"));
-
+builder.Services.AddSingleton<ErrorHandlerMiddleware>();
 builder.Services.AddHostedService<HostedServiceTest>();
 
 var app = builder.Build();
@@ -29,7 +29,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthorization();
-
+app.UseMiddleware<ErrorHandlerMiddleware>();
 app.MapControllers();
 app.MapGet("/api/hc", (IOptionsMonitor<AppOptions> options) => options.CurrentValue);
 app.MapPost("/api/hc", (int id) => Results.Ok($"Resource Added {id}"));
@@ -57,6 +57,12 @@ public class StudentsController : ControllerBase
     public ActionResult Post(StudentWithFluentValidation student)
     {
         return Ok(student);
+    }
+
+    [HttpGet]
+    public ActionResult Get()
+    {
+        throw new NotImplementedException();
     }
 }
 
