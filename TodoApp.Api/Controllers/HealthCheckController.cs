@@ -6,10 +6,17 @@ namespace TodoApp.Api.Controllers
     [ApiController]
     public class HealthCheckController : ControllerBase
     {
-        [HttpGet]
-        public string Get()
+        private readonly IConfiguration _configuration;
+
+        public HealthCheckController(IConfiguration configuration)
         {
-            return "TodoApp!";
+            _configuration = configuration;
+        }
+
+        [HttpGet]
+        public string? Get()
+        {
+            return _configuration.GetRequiredSection("app").Value;
         }
     }
 }
