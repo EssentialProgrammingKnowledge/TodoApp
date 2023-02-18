@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using System.Text.Json;
 using TodoApp.Infrastructure.Repositories;
 
@@ -24,7 +25,7 @@ namespace TodoApp.Infrastructure.Database
                 throw new InvalidOperationException("Check in 'database' section 'connectionString' if is correct");
             }
 
-            services.AddSingleton(databaseOptions);
+            services.AddSingleton(Options.Create(databaseOptions));
             var serverVersion = ServerVersion.AutoDetect(databaseOptions.ConnectionString);
             services.AddDbContext<TodoDbContext>(options => options.UseMySql(databaseOptions.ConnectionString, serverVersion));
             services.AddEFCoreRepositories();

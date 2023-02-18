@@ -42,7 +42,7 @@ namespace TodoApp.Infrastructure.Database
             using var cmd = conn.CreateCommand();
             await conn.OpenAsync();
             cmd.CommandText = $"CREATE DATABASE IF NOT EXISTS `{database}`";
-            cmd.ExecuteNonQueryAsync();
+            await cmd.ExecuteNonQueryAsync();
         }
     }
 }
