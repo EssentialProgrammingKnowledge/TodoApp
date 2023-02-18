@@ -1,0 +1,16 @@
+@url = http://localhost:5000/api
+
+###
+GET {{url}}
+
+###
+POST {{url}}/students
+Content-Type: application/json
+
+{
+    "name": "Student First",
+    "age": 10
+}
+
+###
+GET {{url}}/students
