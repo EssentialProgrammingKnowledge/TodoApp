@@ -1,16 +1,51 @@
 @url = http://localhost:5000/api
+@questsUrl = http://localhost:5000/api/quests
 
-###
+### Get HealtchCheck
 GET {{url}}
 
-###
-POST {{url}}/students
+### Get All
+GET {{questsUrl}}
+
+### Add Quest
+POST {{questsUrl}}
 Content-Type: application/json
 
 {
-    "name": "Student First",
-    "age": 10
+    "title": "Quest#1",
+    "description": ""
 }
 
-###
-GET {{url}}/students
+### Get Quest by Id
+GET {{questsUrl}}/1
+
+### Update Quest
+PUT {{questsUrl}}/1
+Content-Type: application/json
+
+{
+    "title": "Quest#1#2023",
+    "description": "Description#2023",
+    "status": "InProgress"
+}
+
+### Get Quest by Id
+GET {{questsUrl}}/1
+
+### Update Quest status
+PATCH {{questsUrl}}/1
+Content-Type: application/json
+
+{
+    "status": "Complete"
+}
+
+
+### Get Quest by Id
+GET {{questsUrl}}/1
+
+### Delete Quest
+DELETE  {{questsUrl}}/1
+
+### Get Quest by Id
+GET {{questsUrl}}/1

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using System.Net;
 using TodoApp.Domain.Exceptions;
 
-namespace TodoApp.Infrastructure;
+namespace TodoApp.Infrastructure.Exceptions;
 
 public class ErrorHandlerMiddleware : IMiddleware
 {

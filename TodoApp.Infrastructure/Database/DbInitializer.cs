@@ -12,12 +12,11 @@ namespace TodoApp.Infrastructure.Database
             _serviceProvider = serviceProvider;
         }
 
-        public Task StartAsync(CancellationToken cancellationToken)
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
             var scope = _serviceProvider.CreateScope();
             var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
-            dbInitializer.Start();
-            return Task.CompletedTask;
+            await dbInitializer.Start();
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
