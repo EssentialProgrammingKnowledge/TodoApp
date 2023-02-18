@@ -1,13 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;
 using TodoApp.Infrastructure.Repositories;
-using TodoApp.Migrations;
 
 namespace TodoApp.Infrastructure.Database
 {
     internal static class Extensions
     {
+        #region ConsoleApp
+
         public static IServiceCollection AddDatabase(this IServiceCollection services, Dictionary<string, object> appsettings)
         {
             var databaseOptionsJsonElement = (JsonElement)(appsettings["database"]
@@ -26,13 +28,29 @@ namespace TodoApp.Infrastructure.Database
             var serverVersion = ServerVersion.AutoDetect(databaseOptions.ConnectionString);
             services.AddDbContext<TodoDbContext>(options => options.UseMySql(databaseOptions.ConnectionString, serverVersion));
             services.AddEFCoreRepositories();
-
-            if (databaseOptions.AllowMigrations)
-            {
-                services.AddTransient<IDbInitializer, EFDbInitializer>();
-            }
-
+            services.AddScoped<IDbInitializer, EFDbInitializer>();
+            services.AddHostedService<DbInitializer>();
             return services;
         }
+
+        #endregion
+
+        #region WebApi
+
+        public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
+        {
+            var databaseOptionsSection = configuration.GetSection("database");
+            services.Configure<DatabaseOptions>(databaseOptionsSection);
+            var databaseOptions = new DatabaseOptions();
+            databaseOptionsSection.Bind(databaseOptions);
+            var serverVersion = ServerVersion.AutoDetect(databaseOptions.ConnectionString);
+            services.AddDbContext<TodoDbContext>(options => options.UseMySql(databaseOptions.ConnectionString, serverVersion));
+            services.AddEFCoreRepositories();
+            services.AddScoped<IDbInitializer, EFDbInitializer>();
+            services.AddHostedService<DbInitializer>();
+            return services;
+        }
+
+        #endregion
     }
 }

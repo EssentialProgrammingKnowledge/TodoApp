@@ -1,4 +1,4 @@
-﻿namespace TodoApp.Api
+﻿namespace TodoApp.Infrastructure
 {
     public class AppOptions
     {

@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace TodoApp.Core.Entities
+﻿namespace TodoApp.Domain.Entities
 {
     public abstract class BaseEntity
     {

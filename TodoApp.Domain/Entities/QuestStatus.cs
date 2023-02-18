@@ -1,4 +1,4 @@
-﻿namespace TodoApp.Core.Entities
+﻿namespace TodoApp.Domain.Entities
 {
     public enum QuestStatus
     {

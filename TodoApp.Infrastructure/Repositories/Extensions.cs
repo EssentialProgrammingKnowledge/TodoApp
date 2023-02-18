@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using MySql.Data.MySqlClient;
 using System.Data;
-using TodoApp.Core.Entities;
-using TodoApp.Core.Repositories;
+using TodoApp.Domain.Entities;
+using TodoApp.Domain.Repositories;
 using TodoApp.Infrastructure.Database;
 using TodoApp.Infrastructure.Repositories.Files;
 
@@ -28,8 +29,8 @@ namespace TodoApp.Infrastructure.Repositories
         {
             services.AddScoped<IDbConnection, MySqlConnection>(sp =>
             {
-                var options = sp.GetRequiredService<DatabaseOptions>();
-                return new MySqlConnection(options.ConnectionString!);
+                var options = sp.GetRequiredService<IOptions<DatabaseOptions>>();
+                return new MySqlConnection(options.Value.ConnectionString!);
             });
             services.AddScoped<IRepository<Quest>, DapperQuestRepository>();
             return services;

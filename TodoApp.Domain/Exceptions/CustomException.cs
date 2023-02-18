@@ -1,4 +1,4 @@
-﻿namespace TodoApp.Core.Exceptions
+﻿namespace TodoApp.Domain.Exceptions
 {
     public class CustomException : Exception
     {

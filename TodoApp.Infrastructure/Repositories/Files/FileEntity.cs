@@ -1,4 +1,4 @@
-﻿using TodoApp.Core.Entities;
+﻿using TodoApp.Domain.Entities;
 
 namespace TodoApp.Infrastructure.Repositories.Files
 {

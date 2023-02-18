@@ -1,9 +1,9 @@
 ﻿using Moq;
 using Shouldly;
 using TodoApp.Core.DTO;
-using TodoApp.Core.Entities;
-using TodoApp.Core.Exceptions;
-using TodoApp.Core.Repositories;
+using TodoApp.Domain.Entities;
+using TodoApp.Domain.Exceptions;
+using TodoApp.Domain.Repositories;
 using TodoApp.Core.Services;
 using TodoApp.UnitTests.Common;
 

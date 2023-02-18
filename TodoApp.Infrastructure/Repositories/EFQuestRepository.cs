@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TodoApp.Core.Entities;
-using TodoApp.Core.Repositories;
+using TodoApp.Domain.Entities;
+using TodoApp.Domain.Repositories;
 using TodoApp.Infrastructure.Database;
 
 namespace TodoApp.Infrastructure.Repositories

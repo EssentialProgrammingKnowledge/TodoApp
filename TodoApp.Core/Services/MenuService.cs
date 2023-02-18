@@ -1,5 +1,5 @@
 ﻿using TodoApp.Core.DTO;
-using TodoApp.Core.Entities;
+using TodoApp.Domain.Entities;
 using TodoApp.Core.Mappings;
 
 namespace TodoApp.Core.Services

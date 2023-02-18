@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoApp.IntegrationTests", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoApp.Migrations", "TodoApp.Migrations\TodoApp.Migrations.csproj", "{C427B619-33CB-4E5E-ABAF-C563C4E8E802}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoApp.Api", "TodoApp.Api\TodoApp.Api.csproj", "{72EF540C-18B8-4EDD-8F82-43725968312F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoApp.Api", "TodoApp.Api\TodoApp.Api.csproj", "{72EF540C-18B8-4EDD-8F82-43725968312F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoApp.Domain", "TodoApp.Domain\TodoApp.Domain.csproj", "{127D0A34-A8DC-4937-925D-F98BEFA2266D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{72EF540C-18B8-4EDD-8F82-43725968312F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72EF540C-18B8-4EDD-8F82-43725968312F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72EF540C-18B8-4EDD-8F82-43725968312F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{127D0A34-A8DC-4937-925D-F98BEFA2266D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{127D0A34-A8DC-4937-925D-F98BEFA2266D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{127D0A34-A8DC-4937-925D-F98BEFA2266D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{127D0A34-A8DC-4937-925D-F98BEFA2266D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
