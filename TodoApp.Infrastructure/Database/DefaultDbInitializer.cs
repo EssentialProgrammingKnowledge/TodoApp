@@ -1,34 +1,32 @@
 ﻿using FluentMigrator.Runner;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using MySql.Data.MySqlClient;
 
 namespace TodoApp.Infrastructure.Database
 {
     internal sealed class DefaultDbInitializer : IDbInitializer
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly DatabaseOptions _databaseOptions;
+        private readonly IMigrationRunner _migrationRunner;
 
-        public DefaultDbInitializer(IServiceProvider serviceProvider)
+        public DefaultDbInitializer(IOptions<DatabaseOptions> databaseOptions, IMigrationRunner migrationRunner)
         {
-            _serviceProvider = serviceProvider;
+            _databaseOptions = databaseOptions.Value;
+            _migrationRunner = migrationRunner;
         }
 
-        public void Start()
+        public async Task Start()
         {
-            using var scope = _serviceProvider.CreateScope();
-            var databaseOptions = scope.ServiceProvider.GetRequiredService<DatabaseOptions>();
-
-            if (!databaseOptions.AllowMigrations)
+            if (!_databaseOptions.AllowMigrations)
             {
                 return;
             }
 
-            CreateDatabaseIfNotExists(databaseOptions.ConnectionString!);
-            var migrationRunner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>();
-            migrationRunner.MigrateUp();
+            await CreateDatabaseIfNotExists(_databaseOptions.ConnectionString!);
+            _migrationRunner.MigrateUp();
         }
 
-        private void CreateDatabaseIfNotExists(string connectionString)
+        private static async Task CreateDatabaseIfNotExists(string connectionString)
         {
             var connectionStringSplited = connectionString.Split(";");
             var connectionStringWithoutDb = connectionStringSplited.Where(str => !str.Contains("Database="))
@@ -42,9 +40,9 @@ namespace TodoApp.Infrastructure.Database
 
             using var conn = new MySqlConnection(connectionStringWithoutDb);
             using var cmd = conn.CreateCommand();
-            conn.Open();
+            await conn.OpenAsync();
             cmd.CommandText = $"CREATE DATABASE IF NOT EXISTS `{database}`";
-            cmd.ExecuteNonQuery();
+            cmd.ExecuteNonQueryAsync();
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿using TodoApp.Core.Entities;
+﻿using TodoApp.Domain.Entities;
 
-namespace TodoApp.Core.Repositories
+namespace TodoApp.Domain.Repositories
 {
     public interface IRepository<T>
         where T : BaseEntity

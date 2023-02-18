@@ -1,29 +1,27 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace TodoApp.Infrastructure.Database
 {
     internal class EFDbInitializer : IDbInitializer
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly DatabaseOptions _databaseOptions;
+        private readonly TodoDbContext _todoDbContext;
 
-        public EFDbInitializer(IServiceProvider serviceProvider)
+        public EFDbInitializer(IOptions<DatabaseOptions> databaseOptions, TodoDbContext todoDbContext)
         {
-            _serviceProvider = serviceProvider;
+            _databaseOptions = databaseOptions.Value;
+            _todoDbContext = todoDbContext;
         }
 
-        public void Start()
+        public async Task Start()
         {
-            using var scope = _serviceProvider.CreateScope();
-            var databaseOptions = scope.ServiceProvider.GetRequiredService<DatabaseOptions>();
-
-            if (!databaseOptions.AllowMigrations)
+            if (!_databaseOptions.AllowMigrations)
             {
                 return;
             }
 
-            using var context = scope.ServiceProvider.GetRequiredService<TodoDbContext>();
-            context.Database.Migrate();
+            await _todoDbContext.Database.MigrateAsync();
         }
     }
 }

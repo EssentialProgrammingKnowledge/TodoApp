@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Text.Json;
-using TodoApp.Core.Entities;
-using TodoApp.Core.Repositories;
+using TodoApp.Domain.Entities;
+using TodoApp.Domain.Repositories;
 using TodoApp.Infrastructure.Repositories.Files;
 
 namespace TodoApp.Infrastructure.Repositories

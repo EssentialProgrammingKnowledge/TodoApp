@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
-using TodoApp.Core.Entities;
-using TodoApp.Core.Repositories;
+using TodoApp.Domain.Entities;
+using TodoApp.Domain.Repositories;
 
 namespace TodoApp.IntegrationTests
 {

@@ -1,7 +1,6 @@
-﻿using System.Text.Json.Serialization;
-using TodoApp.Core.Exceptions;
+﻿using TodoApp.Domain.Exceptions;
 
-namespace TodoApp.Core.Entities
+namespace TodoApp.Domain.Entities
 {
     public class Quest : BaseEntity
     {

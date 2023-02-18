@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.Extensions.DependencyInjection;
 using System.Runtime.CompilerServices;
 using TodoApp.Core.DTO;
 using TodoApp.Core.Services;
@@ -14,6 +16,8 @@ namespace TodoApp.Core
             services.AddSingleton<IEnumerable<MenuDto>>(_ => CreateMenus());
             services.AddSingleton<IMenuService, MenuService>();
             services.AddScoped<IQuestService, QuestService>();
+            services.AddFluentValidationAutoValidation();
+            services.AddValidatorsFromAssembly(typeof(Extensions).Assembly);
             return services;
         }
 

@@ -1,8 +1,8 @@
 ﻿using TodoApp.Core.DTO;
-using TodoApp.Core.Entities;
-using TodoApp.Core.Exceptions;
+using TodoApp.Domain.Entities;
+using TodoApp.Domain.Exceptions;
 using TodoApp.Core.Mappings;
-using TodoApp.Core.Repositories;
+using TodoApp.Domain.Repositories;
 
 namespace TodoApp.Core.Services
 {

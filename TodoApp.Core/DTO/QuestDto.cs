@@ -1,4 +1,5 @@
-﻿using TodoApp.Core.Entities;
+﻿using FluentValidation;
+using TodoApp.Domain.Entities;
 
 namespace TodoApp.Core.DTO
 {
@@ -14,6 +15,21 @@ namespace TodoApp.Core.DTO
         public override string ToString()
         {
             return $"Id: {Id} Title: {Title} Status: {Status} Created: {Created} Modified: {Modified} \nDescription:{Description}";
+        }
+    }
+
+    public class QuestDtoValidator : AbstractValidator<QuestDto>
+    {
+        public QuestDtoValidator()
+        {
+            RuleFor(q => q.Title).MinimumLength(2);
+            RuleFor(q => q.Status).NotNull()
+                                  .NotEmpty();
+
+            When(q => !string.IsNullOrWhiteSpace(q.Description), () =>
+            {
+                RuleFor(quest => quest.Description).MaximumLength(3000);
+            });
         }
     }
 }

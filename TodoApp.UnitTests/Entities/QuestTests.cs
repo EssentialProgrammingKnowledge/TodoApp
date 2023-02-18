@@ -1,6 +1,6 @@
 using Shouldly;
-using TodoApp.Core.Entities;
-using TodoApp.Core.Exceptions;
+using TodoApp.Domain.Entities;
+using TodoApp.Domain.Exceptions;
 using TodoApp.UnitTests.Common;
 
 namespace TodoApp.UnitTests.Entities
