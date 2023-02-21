@@ -1,10 +1,10 @@
-using Microsoft.Extensions.DependencyInjection;
 using TodoApp.Domain.Entities;
 using TodoApp.Domain.Repositories;
+using TodoApp.IntegrationTests.Common;
 
-namespace TodoApp.IntegrationTests
+namespace TodoApp.IntegrationTests.Repositories
 {
-    public class QuestRepositoryTests : IClassFixture<QuestFixture>
+    public class QuestRepositoryTests : BaseTest
     {
         [Fact]
         public async Task should_add_quest_to_database()
@@ -64,9 +64,9 @@ namespace TodoApp.IntegrationTests
 
         private readonly IRepository<Quest> _repository;
 
-        public QuestRepositoryTests(QuestFixture questFixture)
+        public QuestRepositoryTests(TestApplicationFactory testApplicationFactory) : base(testApplicationFactory)
         {
-            _repository = questFixture.ServiceProvider.GetRequiredService<IRepository<Quest>>();
+            _repository = GetRequiredService<IRepository<Quest>>();
         }
     }
 }
