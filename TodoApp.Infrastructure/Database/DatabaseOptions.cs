@@ -4,5 +4,6 @@
     {
         public string? ConnectionString { get; set; }
         public bool AllowMigrations { get; set; } = false;
+        public string Version { get; set; }
     }
 }

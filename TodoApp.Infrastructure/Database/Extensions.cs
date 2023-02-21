@@ -44,8 +44,7 @@ namespace TodoApp.Infrastructure.Database
             services.Configure<DatabaseOptions>(databaseOptionsSection);
             var databaseOptions = new DatabaseOptions();
             databaseOptionsSection.Bind(databaseOptions);
-            var serverVersion = ServerVersion.AutoDetect(databaseOptions.ConnectionString);
-            services.AddDbContext<TodoDbContext>(options => options.UseMySql(databaseOptions.ConnectionString, serverVersion));
+            services.AddDbContext<TodoDbContext>(options => options.UseMySql(databaseOptions.ConnectionString, new MySqlServerVersion(databaseOptions.Version)));
             services.AddEFCoreRepositories();
             services.AddScoped<IDbInitializer, EFDbInitializer>();
             services.AddHostedService<DbInitializer>();
