@@ -8,15 +8,10 @@ namespace TodoApp.IntegrationTests.Common
 {
     public sealed class TestApplicationFactory : WebApplicationFactory<Program>
     {
-        public HttpClient Client { get; }
-
-        public TestApplicationFactory()
+        protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            Client = WithWebHostBuilder(builder => 
-            {
-                builder.ConfigureServices(services => SetupEFCoreInMemory(services));
-                builder.UseEnvironment("test");
-            }).CreateClient();
+            builder.ConfigureServices(SetupEFCoreInMemory);
+            builder.UseEnvironment("test");
         }
 
         public override async ValueTask DisposeAsync()
