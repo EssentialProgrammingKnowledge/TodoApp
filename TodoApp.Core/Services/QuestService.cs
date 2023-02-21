@@ -30,7 +30,7 @@ namespace TodoApp.Core.Services
 
             if (quest is null)
             {
-                throw new CustomException($"Quest with id {dto.Id} was not found");
+                throw new CustomException($"Quest with id: '{dto.Id}' was not found");
             }
 
             quest.ChangeTitle(dto.Title);
@@ -46,7 +46,7 @@ namespace TodoApp.Core.Services
 
             if (quest is null)
             {
-                throw new CustomException($"Quest with id {id} was not found");
+                throw new CustomException($"Quest with id: '{id}' was not found");
             }
 
             await _repository.Delete(quest);
