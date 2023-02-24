@@ -1,0 +1,10 @@
+﻿@page "/quests/{Id:int}"
+
+<h3>QuestEditPage @Id</h3>
+<br />
+<ErrorComponent ErrorText="There is an error" />
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+}
