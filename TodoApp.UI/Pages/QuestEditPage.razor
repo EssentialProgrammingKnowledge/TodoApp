@@ -1,10 +1,24 @@
 ﻿@page "/quests/{Id:int}"
+@inject IJSRuntime JsRuntime
 
 <h3>QuestEditPage @Id</h3>
 <br />
 <ErrorComponent ErrorText="There is an error" />
+<br />
+<button class="btn btn-primary" @onclick="ShowAlertBox">Show alert box</button>
+<div class="prompted-text">
+    @PromptedText
+</div>
 
 @code {
     [Parameter]
     public int Id { get; set; }
+
+    public string? PromptedText { get; set; }
+
+    private async Task ShowAlertBox()
+    {
+        await JsRuntime.InvokeVoidAsync("alert", $"Id alert box {Id}");
+        PromptedText = await JsRuntime.InvokeAsync<string>("prompt", "Take some input:");
+    }
 }
