@@ -1,0 +1,32 @@
+﻿@inject GlobalState GlobalState;
+@implements IDisposable;
+
+<h3>ChatSecondComponent</h3>
+
+<div>
+    @foreach (var message in GlobalState.MessagesSecond)
+    {
+        <div>
+            <p>@message</p>
+        </div>
+    }
+</div>
+
+<button @onclick="SendMessage" class="btn btn-success">Send Message to chat 1</button>
+
+@code {
+    protected override void OnInitialized()
+    {
+        GlobalState.OnChange += StateHasChanged;
+    }
+
+    void SendMessage()
+    {
+        GlobalState.SendMessageToFirstChat("From Chat 2 Sending msg...");
+    }
+
+    public void Dispose()
+    {
+        GlobalState.OnChange -= StateHasChanged;
+    }
+}

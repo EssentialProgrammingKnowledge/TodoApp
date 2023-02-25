@@ -1,0 +1,18 @@
+﻿<h3>ActionComponent</h3>
+<div>
+    Value in ActionComponent @value
+</div>
+<button class="btn btn-primary" @onclick="ClickValue">Click Me</button>
+
+@code {
+    [Parameter]
+    public EventCallback<int> OnClick { get; set; }
+
+    private int value = 0;
+
+    private async Task ClickValue()
+    {
+        value++;
+        await OnClick.InvokeAsync(value);
+    }
+}
