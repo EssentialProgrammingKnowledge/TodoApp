@@ -7,3 +7,30 @@
 Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
+
+<MessageComponent />
+
+<div class="mt-2">
+    <ActionComponent OnClick="UpdateValue"/>
+    <div class="mt-2">
+        Value in Index @value
+    </div>
+</div>
+
+<div class="mt-2">
+    <div class="mt-2">
+        <ChatFirstComponent />
+    </div>
+    <div class="mt-2 mb-2">
+        <ChatSecondComponent />
+    </div>
+</div>
+
+@code {
+    private int value = 0;
+
+    private void UpdateValue(int updateValue)
+    {
+        value = updateValue;
+    }
+}

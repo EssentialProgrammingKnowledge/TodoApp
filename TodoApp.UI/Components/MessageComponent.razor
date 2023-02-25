@@ -1,0 +1,24 @@
+﻿<CascadingValue Value="@showSpinner" >
+    <CascadingValue Value="@message" Name="Message" IsFixed="true">
+        <CascadingValue Value="@badgeMessage" Name="BadgeMessage" IsFixed="true">
+            <MessageClientComponent></MessageClientComponent>
+            <MessageServerComponent></MessageServerComponent>
+        </CascadingValue>
+    </CascadingValue>
+</CascadingValue>
+<button @onclick="ChangeValues" class="btn btn-warning">
+    Change Values
+</button>
+
+@code {
+    private string message = "This is message";
+    private bool showSpinner = false;
+    private string badgeMessage = "Badge#";
+
+    private void ChangeValues()
+    {
+        message = "After Click Message";
+        showSpinner = true;
+        badgeMessage = "#Clicked";
+    }
+}
