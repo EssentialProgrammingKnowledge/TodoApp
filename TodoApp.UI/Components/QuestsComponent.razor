@@ -158,5 +158,6 @@
     public async Task ChangeStatus(int id, string status)
     {
         await OnChangeStatus.InvokeAsync(new ChangeQuestStatus(id, status));
+        QuestClicked = null;
     }
 }

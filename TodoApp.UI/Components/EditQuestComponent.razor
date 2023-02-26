@@ -17,23 +17,23 @@
         else
         {
             <div>
-                <EditForm Model="@quest" OnValidSubmit="@HandleValidSubmit">
+                <EditForm Model="@QuestModified" OnValidSubmit="@HandleValidSubmit">
                     <FluentValidationValidator />
                     <div class="modal-body">
                         <div>
                             <div class="form-group mt-2">
                                 <label data-name="quest-title-label">Title</label>
-                                <InputText class="form-control" @bind-Value="quest.Title" data-name="quest-title-input" />
-                                <ValidationMessage For="@(() => quest.Title)" data-name="quest-title-validation" />
+                                <InputText class="form-control" @bind-Value="QuestModified.Title" data-name="quest-title-input" />
+                                <ValidationMessage For="@(() => QuestModified.Title)" data-name="quest-title-validation" />
                             </div>
                             <div class="form-group mt-2">
                                 <label data-name="quest-description-label">Description</label>
-                                <InputTextArea class="form-control" @bind-Value="quest.Description" data-name="quest-description-input" />
-                                <ValidationMessage For="@(() => quest.Description)" data-name="quest-description-validation" />
+                                <InputTextArea class="form-control" @bind-Value="QuestModified.Description" data-name="quest-description-input" />
+                                <ValidationMessage For="@(() => QuestModified.Description)" data-name="quest-description-validation" />
                             </div>
                             <div class="form-group mt-2">
                                 <label data-name="quest-status-label">Status</label>
-                                <InputSelect class="form-control" @bind-Value="quest.Status" data-name="quest-status-input">
+                                <InputSelect class="form-control" @bind-Value="QuestModified.Status" data-name="quest-status-input">
                                     <option value="">Select status</option>
                                     <option value="New">New</option>
                                     <option value="InProgress">InProgress</option>
@@ -72,10 +72,10 @@
     {
         if (Quest is not null)
         {
-            quest.Id = Quest.Id;
-            quest.Title = Quest.Title;
-            quest.Description = Quest.Description;
-            quest.Status = Quest.Status;
+            QuestModified.Id = Quest.Id;
+            QuestModified.Title = Quest.Title;
+            QuestModified.Description = Quest.Description;
+            QuestModified.Status = Quest.Status;
         }
         base.OnInitialized();
     }
@@ -88,21 +88,21 @@
 
     public void CloseModal()
     {
-        quest = new QuestDto();
+        QuestModified = new QuestDto();
     }
 
-    private QuestDto quest = new();
+    public QuestDto QuestModified { get; private set; } = new();
 
     private async Task HandleValidSubmit()
     {
         await OnUpdate.InvokeAsync(new QuestDto
         {
-            Id = quest.Id,
-            Title = quest.Title,
-            Status = quest.Status,
-            Description = quest.Description,
-            Created = quest.Created,
-            Modified = quest.Modified
+            Id = QuestModified.Id,
+            Title = QuestModified.Title,
+            Status = QuestModified.Status,
+            Description = QuestModified.Description,
+            Created = QuestModified.Created,
+            Modified = QuestModified.Modified
         });
         CloseModal();
     }
