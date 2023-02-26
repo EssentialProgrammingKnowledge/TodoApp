@@ -2,7 +2,7 @@
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Runtime.CompilerServices;
-using TodoApp.Core.DTO;
+using TodoApp.Shared.DTO;
 using TodoApp.Core.Services;
 
 [assembly: InternalsVisibleTo("TodoApp.UnitTests")]
@@ -17,7 +17,7 @@ namespace TodoApp.Core
             services.AddSingleton<IMenuService, MenuService>();
             services.AddScoped<IQuestService, QuestService>();
             services.AddFluentValidationAutoValidation();
-            services.AddValidatorsFromAssembly(typeof(Extensions).Assembly);
+            services.AddValidatorsFromAssembly(typeof(QuestDto).Assembly);
             return services;
         }
 

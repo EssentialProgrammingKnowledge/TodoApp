@@ -1,0 +1,78 @@
+﻿@using Blazored.FluentValidation
+@using TodoApp.Shared.DTO;
+
+<button class="btn btn-primary" @onclick="OpenModal" data-name="quest-add-button">
+    Add
+    <span class="oi oi-task"></span>
+</button>
+
+@if (IsModalOpen)
+{
+    <ModalComponent Title="Create Quest" OnClose="CloseModal">
+        <Content>
+            <div>
+                <EditForm Model="@quest" OnValidSubmit="@HandleValidSubmit">
+                    <FluentValidationValidator />
+                    <div class="modal-body">
+                        <div>
+                            <div class="form-group mt-2">
+                                <label data-name="quest-title-label">Title</label>
+                                <InputText class="form-control" @bind-Value="quest.Title" data-name="quest-title-input" />
+                                <ValidationMessage For="@(() => quest.Title)" data-name="quest-title-validation" />
+                            </div>
+                            <div class="form-group mt-2">
+                                <label data-name="quest-description-label">Description</label>
+                                <InputTextArea class="form-control" @bind-Value="quest.Description" data-name="quest-description-input" />
+                                <ValidationMessage For="@(() => quest.Description)" data-name="quest-description-validation"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div>
+                            <button class="btn btn-success me-2" type="submit" data-name="quest-submit-button">
+                                Add
+                            </button>
+                            <button class="btn btn-secondary" type="button" @onclick="CloseModal" data-name="quest-close-button">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </EditForm>
+             </div>
+        </Content>
+    </ModalComponent>
+}
+
+@code {
+    [Parameter]
+    public EventCallback<QuestDto> OnAdd { get; set; }
+
+    public bool IsModalOpen { get; private set; } = false;
+
+    public void OpenModal()
+    {
+        IsModalOpen = true;
+    }
+
+    public void CloseModal()
+    {
+        IsModalOpen = false;
+        quest = new QuestDto();
+    }
+
+    private QuestDto quest = new();
+
+    private async Task HandleValidSubmit()
+    {
+        await OnAdd.InvokeAsync(new QuestDto
+        {
+            Id = quest.Id,
+            Title = quest.Title,
+            Status = quest.Status,
+            Description = quest.Description,
+            Created = quest.Created,
+            Modified = quest.Modified
+        });
+        CloseModal();
+    }
+}

@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 
-namespace TodoApp.Core.DTO
+namespace TodoApp.Shared.DTO
 {
-    public record ChangeQuestStatus(string Status);
+    public record ChangeQuestStatus(int Id, string Status);
 
     public class ChangeQuestStatusValidator : AbstractValidator<ChangeQuestStatus>
     {

@@ -1,0 +1,43 @@
+﻿<div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered @(Size switch{
+            ModalSize.Small => "modal-sm",
+            ModalSize.Large => "modal-lg",
+            ModalSize.ExtraLarge => "modal-xl",
+            _ => ""
+        })">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" data-name="modal-title">@Title</h4>
+                <button type="button" class="btn btn-close" @onclick="@ModalCancel" aria-label="Close" data-name="modal-close-button"></button>
+            </div>
+            @Content
+        </div>
+    </div>
+</div>
+
+@code {
+    public enum ModalSize
+    {
+        Small,
+        Default,
+        Large,
+        ExtraLarge
+    }
+
+    [Parameter]
+    public ModalSize Size { get; set; } = ModalSize.Default;
+
+    [Parameter]
+    public string Title { get; set; } = "Modal";
+
+    [Parameter]
+    public EventCallback<bool> OnClose { get; set; }
+
+    [Parameter]
+    public RenderFragment? Content { get; set; }
+
+    private Task ModalCancel()
+    {
+        return OnClose.InvokeAsync(false);
+    }
+}

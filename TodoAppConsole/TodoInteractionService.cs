@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using TodoApp.Core.DTO;
+using TodoApp.Shared.DTO;
 using TodoApp.Core.Services;
 
 namespace TodoAppConsole
