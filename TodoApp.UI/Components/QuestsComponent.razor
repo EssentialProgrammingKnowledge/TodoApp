@@ -1,0 +1,162 @@
+﻿@using TodoApp.Shared.DTO;
+@inject NavigationManager NavigationManager
+
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Title</th>
+            <th scope="col">Status</th>
+            <th scope="col">Created</th>
+            <th scope="col">Modified</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Quests is not null)
+        {
+            @foreach (var quest in Quests)
+            {
+                @if (QuestClicked?.Id == quest.Id)
+                {
+                    <tr>
+                        <td colspan="6" class="text-center">
+                            @switch(quest.Status)
+                            {
+                                case "New":
+                                    <button class="btn btn-warning me-2" @onclick='async () => await ChangeStatus(quest.Id, "InProgress")' data-name="quest-set-as-in-progress-button">Set as InProgress</button>
+                                    <button class="btn btn-success" @onclick='async () => await ChangeStatus(quest.Id, "Complete")' data-name="quest-set-as-complete-button">Set as Complete</button>
+                                    break;
+                                case "InProgress":
+                                    <button class="btn btn-primary me-2" @onclick='async () => await ChangeStatus(quest.Id, "New")' data-name="quest-set-as-new-button">Set as New</button>
+                                    <button class="btn btn-success" @onclick='async () => await ChangeStatus(quest.Id, "Complete")' data-name="">Set as Complete</button>
+                                    break;
+                                case "Complete":
+                                    <button class="btn btn-primary me-2" @onclick='async () => await ChangeStatus(quest.Id, "New")' data-name="quest-set-as-new-button">Set as New</button>
+                                    <button class="btn btn-warning me-2" @onclick='async () => await ChangeStatus(quest.Id, "InProgress")' data-name="quest-set-as-in-progress-button">Set as InProgress</button>
+                                    break;
+                                default: 
+                                    break;
+                            }
+                        </td>
+                    </tr>
+                }
+                <tr class="@(quest.Status switch {
+                                "New" => "table-primary",
+                                "InProgress" => "table-warning",
+                                "Complete" => "table-success",
+                                _ => ""
+                            })" @onclick="() => OnClickedQuest(quest)"
+                            data-name="quest-row-action-@(quest.Id)">
+                        <th scope="row">@quest.Id</th>
+                        <td>@quest.Title</td>
+                        <td>@quest.Status</td>
+                        <td>@quest.Created</td>
+                        <td>@quest.Modified</td>
+                        <td @onclick:stopPropagation="true">
+                            <span class="oi oi-magnifying-glass icon-click me-2" title="View" @onclick='() => NavigationManager.NavigateTo($"/quests/{quest.Id}")' data-name="quest-@(quest.Id)-view-action"></span>
+                            <span class="oi oi-pencil icon-click me-2" title="Edit" @onclick="() => OpenEditQuestModal(quest)" data-name="quest-@(quest.Id)-edit-action"></span>
+                            <span class="oi oi-trash icon-click" title="Delete" @onclick="() => OpenDeleteQuestModal(quest)" data-name="quest-@(quest.Id)-delete-action"></span>
+                        </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@if (IsQuestToEdit)
+{
+    <EditQuestComponent Quest="QuestToEdit" OnUpdate="ConfirmUpdateQuest" OnCancel="CloseEditQuestModal" />
+}
+@if (IsQuestToDelete)
+{
+    <ModalComponent Title="Delete Quest" OnClose="CloseDeleteQuestModal">
+        <Content>
+            <div class="modal-body" data-name="quest-delete-action-body">
+                Do you wish to delete quest @(QuestToDelete?.Title)
+            </div>
+            <div class="modal-footer">
+                <div>
+                    <button class="btn btn-danger me-2" @onclick="() => ConfirmDeleteQuest(QuestToDelete!)" data-name="quest-delete-action-confirm">
+                        Yes
+                    </button>
+                    <button class="btn btn-secondary" @onclick="CloseDeleteQuestModal" data-name="quest-delete-action-cancel">
+                        No
+                    </button>
+                </div>
+            </div>
+        </Content>
+    </ModalComponent>
+}
+
+@code {
+    [Parameter]
+    public IList<QuestDto>? Quests { get; set; }
+
+    [Parameter]
+    public EventCallback<QuestDto> OnDelete { get; set; }
+
+    [Parameter]
+    public EventCallback<QuestDto> OnUpdate { get; set; }
+
+    [Parameter]
+    public EventCallback<ChangeQuestStatus> OnChangeStatus { get; set; }
+
+    public QuestDto? QuestClicked { get; private set; }
+    public bool IsQuestToDelete { get; private set; }
+    public QuestDto? QuestToDelete { get; private set; }
+    public bool IsQuestToEdit { get; private set; }
+    public QuestDto? QuestToEdit { get; private set; }
+
+    public void OnClickedQuest(QuestDto questDto)
+    {
+        if (QuestClicked?.Id == questDto.Id)
+        {
+            QuestClicked = null;
+            return;
+        }
+
+        QuestClicked = questDto;
+    }
+
+    public void OpenDeleteQuestModal(QuestDto questDto)
+    {
+        QuestToDelete = questDto;
+        IsQuestToDelete = true;
+    }
+
+    public void CloseDeleteQuestModal()
+    {
+        QuestToDelete = null;
+        IsQuestToDelete = false;
+    }
+
+    private async Task ConfirmDeleteQuest(QuestDto questDto)
+    {
+        CloseDeleteQuestModal();
+        await OnDelete.InvokeAsync(questDto);
+    }
+
+    public void OpenEditQuestModal(QuestDto questDto)
+    {
+        QuestToEdit = questDto;
+        IsQuestToEdit = true;
+    }
+
+    public void CloseEditQuestModal()
+    {
+        QuestToEdit = null;
+        IsQuestToEdit = false;
+    }
+
+    private async Task ConfirmUpdateQuest(QuestDto questDto)
+    {
+        CloseEditQuestModal();
+        await OnUpdate.InvokeAsync(questDto);
+    }
+
+    public async Task ChangeStatus(int id, string status)
+    {
+        await OnChangeStatus.InvokeAsync(new ChangeQuestStatus(id, status));
+    }
+}

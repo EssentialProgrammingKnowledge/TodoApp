@@ -1,4 +1,4 @@
-﻿namespace TodoApp.Core.DTO
+﻿namespace TodoApp.Shared.DTO
 {
     public interface IBaseDto
     {

@@ -1,6 +1,6 @@
 ﻿using Moq;
 using Shouldly;
-using TodoApp.Core.DTO;
+using TodoApp.Shared.DTO;
 using TodoApp.Domain.Entities;
 using TodoApp.Domain.Exceptions;
 using TodoApp.Domain.Repositories;
@@ -103,7 +103,7 @@ namespace TodoApp.UnitTests.Services
             var quest = Fixture.CreateDefaultQuest();
             _repository.Setup(r => r.Get(quest.Id)).ReturnsAsync(quest);
 
-            _questService.DeleteQuest(quest.Id);
+            await _questService.DeleteQuest(quest.Id);
 
             _repository.Verify(r => r.Delete(quest), times: Times.Once);
         }

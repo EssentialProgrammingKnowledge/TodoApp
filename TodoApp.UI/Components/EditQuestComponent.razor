@@ -1,0 +1,109 @@
+﻿@using Blazored.FluentValidation
+@using TodoApp.Shared.DTO;
+
+<ModalComponent Title="Edit Quest" OnClose="CancelEdit">
+    <Content>
+        @if (Quest is null)
+        {
+            <div class="modal-body" data-name="quest-not-found-content">
+                Sorry, there is no Quest
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" @onclick="CancelEdit" data-name="quest-close-button">
+                    Close
+                </button>
+            </div>
+        }
+        else
+        {
+            <div>
+                <EditForm Model="@quest" OnValidSubmit="@HandleValidSubmit">
+                    <FluentValidationValidator />
+                    <div class="modal-body">
+                        <div>
+                            <div class="form-group mt-2">
+                                <label data-name="quest-title-label">Title</label>
+                                <InputText class="form-control" @bind-Value="quest.Title" data-name="quest-title-input" />
+                                <ValidationMessage For="@(() => quest.Title)" data-name="quest-title-validation" />
+                            </div>
+                            <div class="form-group mt-2">
+                                <label data-name="quest-description-label">Description</label>
+                                <InputTextArea class="form-control" @bind-Value="quest.Description" data-name="quest-description-input" />
+                                <ValidationMessage For="@(() => quest.Description)" data-name="quest-description-validation" />
+                            </div>
+                            <div class="form-group mt-2">
+                                <label data-name="quest-status-label">Status</label>
+                                <InputSelect class="form-control" @bind-Value="quest.Status" data-name="quest-status-input">
+                                    <option value="">Select status</option>
+                                    <option value="New">New</option>
+                                    <option value="InProgress">InProgress</option>
+                                    <option value="Complete">Complete</option>
+                                </InputSelect>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div>
+                            <button class="btn btn-success me-2" type="submit" data-name="quest-submit-button">
+                                Save
+                            </button>
+                            <button class="btn btn-secondary" type="button" @onclick="CancelEdit" data-name="quest-close-button">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </EditForm>
+            </div>
+        }
+    </Content>
+</ModalComponent>
+
+@code {
+    [Parameter]
+    public QuestDto? Quest { get; set; }
+
+    [Parameter]
+    public EventCallback<QuestDto> OnUpdate { get; set; }
+
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (Quest is not null)
+        {
+            quest.Id = Quest.Id;
+            quest.Title = Quest.Title;
+            quest.Description = Quest.Description;
+            quest.Status = Quest.Status;
+        }
+        base.OnInitialized();
+    }
+
+    public async Task CancelEdit()
+    {
+        CloseModal();
+        await OnCancel.InvokeAsync();
+    }
+
+    public void CloseModal()
+    {
+        quest = new QuestDto();
+    }
+
+    private QuestDto quest = new();
+
+    private async Task HandleValidSubmit()
+    {
+        await OnUpdate.InvokeAsync(new QuestDto
+        {
+            Id = quest.Id,
+            Title = quest.Title,
+            Status = quest.Status,
+            Description = quest.Description,
+            Created = quest.Created,
+            Modified = quest.Modified
+        });
+        CloseModal();
+    }
+}

@@ -1,14 +1,13 @@
 ﻿using FluentValidation;
-using TodoApp.Domain.Entities;
 
-namespace TodoApp.Core.DTO
+namespace TodoApp.Shared.DTO
 {
     public class QuestDto : IBaseDto
     {
         public int Id { get; set; }
         public string Title { get; set; } = "";
         public string Description { get; set; } = "";
-        public string Status { get; set; } = QuestStatus.New.ToString();
+        public string Status { get; set; } = "New";
         public DateTime Created { get; set; }
         public DateTime? Modified { get; set; }
 

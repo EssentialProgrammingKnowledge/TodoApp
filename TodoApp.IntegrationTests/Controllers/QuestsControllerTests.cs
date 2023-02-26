@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using TodoApp.Core.DTO;
+using TodoApp.Shared.DTO;
 using TodoApp.IntegrationTests.Common;
 
 namespace TodoApp.IntegrationTests.Controllers
@@ -97,7 +97,7 @@ namespace TodoApp.IntegrationTests.Controllers
         public async Task should_change_quest_status_and_return_status_204()
         {
             var quest = await AddDefaultQuest();
-            var questStatus = new ChangeQuestStatus("InProgress");
+            var questStatus = new ChangeQuestStatus(quest.Id, "InProgress");
 
             var response = await Client.PatchAsJsonAsync($"{PATH}/{quest.Id}", questStatus);
 
@@ -108,7 +108,7 @@ namespace TodoApp.IntegrationTests.Controllers
         public async Task should_change_quest_status()
         {
             var quest = await AddDefaultQuest();
-            var questStatus = new ChangeQuestStatus("Complete");
+            var questStatus = new ChangeQuestStatus(quest.Id, "Complete");
 
             await Client.PatchAsJsonAsync($"{PATH}/{quest.Id}", questStatus);
 
@@ -120,7 +120,7 @@ namespace TodoApp.IntegrationTests.Controllers
         public async Task given_invalid_status_when_change_quest_status_should_return_400()
         {
             var quest = await AddDefaultQuest();
-            var questStatus = new ChangeQuestStatus("");
+            var questStatus = new ChangeQuestStatus(quest.Id, "");
 
             var response = await Client.PatchAsJsonAsync($"{PATH}/{quest.Id}", questStatus);
 

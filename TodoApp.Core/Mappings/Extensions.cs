@@ -1,4 +1,4 @@
-﻿using TodoApp.Core.DTO;
+﻿using TodoApp.Shared.DTO;
 using TodoApp.Domain.Entities;
 
 namespace TodoApp.Core.Mappings

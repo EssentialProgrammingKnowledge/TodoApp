@@ -1,0 +1,58 @@
+﻿@page "/quests/{Id:int}"
+@using TodoApp.Shared.DTO;
+@using TodoApp.UI.Services;
+@inject IQuestService QuestService
+
+@if (Loading)
+{
+    <LoadingIconComponent />
+}
+else if (quest is null)
+{
+    <p><em data-name="quest-not-found-text">There is no quest with Id @(Id)</em></p>
+}
+else
+{
+    <h3 data-name="quest-title-header-text">Quest @(quest.Title)</h3>
+    <div class="form-group mt-2 mb-2">
+        <label data-name="quest-description-label">
+            Description
+        </label>
+        <textarea class="form-control" readonly data-name="quest-description-input">
+            @quest.Description
+        </textarea>
+    </div>
+    <div class="form-group mt-2 mb-2">
+        <label data-name="quest-status-label">
+            Status
+        </label>
+        <input type="text" class="form-control" value="@quest.Status" readonly data-name="quest-status-input" />
+    </div>
+    <div class="form-group mt-2 mb-2">
+        <label data-name="quest-created-label">
+            Created
+        </label>
+        <input type="text" class="form-control" readonly value="@quest.Created" data-name="quest-created-input" />
+    </div>
+    <div class="form-group mt-2 mb-2">
+        <label data-name="quest-modified-label">
+            Modified
+        </label>
+        <input type="text" class="form-control" readonly value="@quest.Modified" data-name="quest-modified-input" />
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    public bool Loading { get; private set; } = true;
+    private QuestDto? quest;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(1000);
+        quest = QuestService.GetById(Id);
+        Loading = false;
+    }
+}

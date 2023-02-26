@@ -1,5 +1,5 @@
 ﻿using Shouldly;
-using TodoApp.Core.DTO;
+using TodoApp.Shared.DTO;
 using TodoApp.Core.Services;
 using TodoApp.Domain.Entities;
 using TodoApp.UnitTests.Common;

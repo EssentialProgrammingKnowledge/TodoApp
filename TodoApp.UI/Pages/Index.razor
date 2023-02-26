@@ -1,36 +1,71 @@
 ﻿@page "/"
+@using TodoApp.Shared.DTO;
+@using TodoApp.UI.Services;
+@inject IQuestService QuestService
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Quests</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1 data-name="quests-information">Hello, add a quest that to be done!</h1>
 
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
-
-<MessageComponent />
-
-<div class="mt-2">
-    <ActionComponent OnClick="UpdateValue"/>
+@if (Loading)
+{
+    <LoadingIconComponent />
+}
+else
+{
     <div class="mt-2">
-        Value in Index @value
+        <div class="mb-2">
+            <AddQuestComponent OnAdd="AddQuest" />
+        </div>
+        <QuestsComponent Quests="quests" OnUpdate="UpdateQuest" OnDelete="DeleteQuest" OnChangeStatus="ChangeStatus" />
     </div>
-</div>
-
-<div class="mt-2">
-    <div class="mt-2">
-        <ChatFirstComponent />
-    </div>
-    <div class="mt-2 mb-2">
-        <ChatSecondComponent />
-    </div>
-</div>
+}
 
 @code {
-    private int value = 0;
+    public bool Loading { get; set; } = true;
+    private List<QuestDto> quests = new();
 
-    private void UpdateValue(int updateValue)
+    protected override async Task OnInitializedAsync()
     {
-        value = updateValue;
+        await Task.Delay(1000);
+        FetchQuests();
+        await base.OnInitializedAsync();
+        Loading = false;
+    }
+
+    private void AddQuest(QuestDto questDto)
+    {
+        QuestService.Add(questDto);
+        FetchQuests();
+    }
+
+    private void UpdateQuest(QuestDto questDto)
+    {
+        QuestService.Update(questDto);
+        FetchQuests();
+    }
+
+    private void DeleteQuest(QuestDto questDto)
+    {
+        if (questDto is null)
+        {
+            return;
+        }
+
+        QuestService.Delete(questDto.Id);
+        FetchQuests();
+    }
+
+    private void ChangeStatus(ChangeQuestStatus changeQuestStatus)
+    {
+        QuestService.ChangeStatus(changeQuestStatus);
+        FetchQuests();
+    }
+
+    private void FetchQuests()
+    {
+        Loading = true;
+        quests = QuestService.GetAll();
+        Loading = false;
     }
 }

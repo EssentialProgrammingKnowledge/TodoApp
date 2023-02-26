@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TodoApp.Core.DTO;
+using TodoApp.Shared.DTO;
 using TodoApp.Core.Services;
 
 namespace TodoApp.Api.Controllers

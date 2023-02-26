@@ -1,4 +1,4 @@
-﻿using TodoApp.Core.DTO;
+﻿using TodoApp.Shared.DTO;
 
 namespace TodoApp.Core.Services
 {
