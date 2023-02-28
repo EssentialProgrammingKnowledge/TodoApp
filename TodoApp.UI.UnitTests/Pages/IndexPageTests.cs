@@ -41,6 +41,8 @@ namespace TodoApp.UI.UnitTests.Pages
         {
             _component.Instance.Loading = true;
 
+            _component.Render();
+
             var spinner = _component.Find("[data-name=\"spinner\"]");
             spinner.ShouldNotBeNull();
             spinner.InnerHtml.ShouldNotBeNullOrWhiteSpace();
@@ -129,10 +131,8 @@ namespace TodoApp.UI.UnitTests.Pages
         private async Task<IRenderedComponent<IndexPage>> CreateComponentWithQuests(List<QuestDto>? questDtos = null)
         {
             var quests = questDtos ?? TestFixture.GetQuests().ToList();
-            _questService.Setup(q => q.GetAll()).Returns(quests);
+            _questService.Setup(q => q.GetAll()).ReturnsAsync(quests);
             var component = _testContext.RenderComponent<IndexPage>();
-            //delay 1s on init at IndexPage
-            await Task.Delay(1200);
             return component;
         }
 

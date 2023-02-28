@@ -4,7 +4,7 @@
     {
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-            return services.AddSingleton<IQuestService, QuestService>();
+            return services.AddScoped<IQuestService, QuestService>();
         }
     }
 }

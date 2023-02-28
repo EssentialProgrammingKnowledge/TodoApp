@@ -27,45 +27,43 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        await Task.Delay(1000);
-        FetchQuests();
+        await FetchQuests();
         await base.OnInitializedAsync();
-        Loading = false;
     }
 
-    private void AddQuest(QuestDto questDto)
+    private async Task AddQuest(QuestDto questDto)
     {
-        QuestService.Add(questDto);
-        FetchQuests();
+        await QuestService.Add(questDto);
+        await FetchQuests();
     }
 
-    private void UpdateQuest(QuestDto questDto)
+    private async Task UpdateQuest(QuestDto questDto)
     {
-        QuestService.Update(questDto);
-        FetchQuests();
+        await QuestService.Update(questDto);
+        await FetchQuests();
     }
 
-    private void DeleteQuest(QuestDto questDto)
+    private async Task DeleteQuest(QuestDto questDto)
     {
         if (questDto is null)
         {
             return;
         }
 
-        QuestService.Delete(questDto.Id);
-        FetchQuests();
+        await QuestService.Delete(questDto.Id);
+        await FetchQuests();
     }
 
-    private void ChangeStatus(ChangeQuestStatus changeQuestStatus)
+    private async Task ChangeStatus(ChangeQuestStatus changeQuestStatus)
     {
-        QuestService.ChangeStatus(changeQuestStatus);
-        FetchQuests();
+        await QuestService.ChangeStatus(changeQuestStatus);
+        await FetchQuests();
     }
 
-    private void FetchQuests()
+    private async Task FetchQuests()
     {
         Loading = true;
-        quests = QuestService.GetAll();
+        quests = await QuestService.GetAll();
         Loading = false;
     }
 }
