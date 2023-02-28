@@ -11,6 +11,8 @@ namespace TodoApp.Infrastructure
     {
         #region WebApi
 
+        private const string CORS_POLICY = "TodoAppCorsPolicy";
+
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<AppOptions>(configuration.GetSection("app"));
@@ -19,6 +21,12 @@ namespace TodoApp.Infrastructure
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
+            services.AddCors(cors => cors.AddPolicy(CORS_POLICY, policy =>
+            {
+                policy.WithOrigins(configuration.GetValue<string>("frontend") ?? throw new InvalidOperationException("frontend url should be provided"));
+                policy.WithMethods("POST", "PUT", "PATCH", "DELETE");
+                policy.WithHeaders("content-type");
+            }));
             return services;
         }
 
@@ -30,6 +38,7 @@ namespace TodoApp.Infrastructure
                 app.UseSwaggerUI();
             }
 
+            app.UseCors(CORS_POLICY);
             app.UseAuthorization();
             app.UseErrorHandling();
             app.MapControllers();
