@@ -1,71 +1,54 @@
-﻿using TodoApp.Shared.DTO;
+﻿using System.Net;
+using System.Net.Http.Json;
+using TodoApp.Shared.DTO;
 
 namespace TodoApp.UI.Services
 {
     public class QuestService : IQuestService
     {
-        private readonly List<QuestDto> _questDtos = new()
-        {
-            new QuestDto { Id = 1, Title = "Title#1", Status = "New", Created = DateTime.UtcNow },
-            new QuestDto { Id = 2, Title = "Title#2", Status = "InProgress", Created = new DateTime(2023, 2, 26, 10, 20, 30), Description = "Description#2", Modified = new DateTime(2023, 2, 26, 15, 25, 30) },
-            new QuestDto { Id = 3, Title = "Title#3", Status = "Complete", Created = new DateTime(2023, 2, 26, 10, 25, 30), Description = "Description#3", Modified = DateTime.Now }
-        };
+        private readonly HttpClient _httpClient;
+        private const string BASE_URL = "/api/quests";
 
-        public void Add(QuestDto questDto)
+        public QuestService(HttpClient httpClient)
         {
-            questDto.Id = _questDtos.Max(q => q.Id) + 1;
-            questDto.Created = DateTime.Now;
-            _questDtos.Add(questDto);
+            _httpClient = httpClient;
         }
 
-        public void ChangeStatus(ChangeQuestStatus changeQuestStatus)
+        public Task Add(QuestDto questDto)
         {
-            var quest = _questDtos.SingleOrDefault(q => q.Id == changeQuestStatus.Id);
+            return _httpClient.PostAsJsonAsync(BASE_URL, questDto);
+        }
 
-            if (quest is null)
+        public Task ChangeStatus(ChangeQuestStatus changeQuestStatus)
+        {
+            return _httpClient.PatchAsJsonAsync($"{BASE_URL}/{changeQuestStatus.Id}", changeQuestStatus);
+        }
+
+        public Task Delete(int id)
+        {
+            return _httpClient.DeleteAsync($"{BASE_URL}/{id}");
+        }
+
+        public async Task<List<QuestDto>> GetAll()
+        {
+            return (await _httpClient.GetFromJsonAsync<List<QuestDto>>(BASE_URL)) ?? new List<QuestDto>();
+        }
+
+        public async Task<QuestDto?> GetById(int id)
+        {
+            var response = await _httpClient.GetAsync($"{BASE_URL}/{id}");
+
+            if (response.StatusCode is HttpStatusCode.NotFound)
             {
-                return;
+                return null;
             }
 
-            quest.Status = changeQuestStatus.Status;
-            quest.Modified = DateTime.Now;
+            return await response.Content.ReadFromJsonAsync<QuestDto>();
         }
 
-        public void Delete(int id)
+        public Task Update(QuestDto questDto)
         {
-            var questToDelete = _questDtos.SingleOrDefault(q => q.Id == id);
-
-            if (questToDelete is null)
-            {
-                return;
-            }
-
-            _questDtos.Remove(questToDelete);
-        }
-
-        public List<QuestDto> GetAll()
-        {
-            return _questDtos;
-        }
-
-        public QuestDto? GetById(int id)
-        {
-            return _questDtos.SingleOrDefault(q => q.Id == id);
-        }
-
-        public void Update(QuestDto questDto)
-        {
-            var questToUpdate = _questDtos.SingleOrDefault(q => q.Id == questDto?.Id);
-
-            if (questToUpdate is null)
-            {
-                return;
-            }
-
-            questToUpdate.Title = questDto.Title;
-            questToUpdate.Description = questDto.Description;
-            questToUpdate.Status = questDto.Status;
-            questToUpdate.Modified = DateTime.Now;
+            return _httpClient.PutAsJsonAsync($"{BASE_URL}/{questDto.Id}", questDto);
         }
     }
 }

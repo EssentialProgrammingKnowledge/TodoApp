@@ -51,8 +51,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        await Task.Delay(1000);
-        quest = QuestService.GetById(Id);
+        quest = await QuestService.GetById(Id);
         Loading = false;
     }
 }
