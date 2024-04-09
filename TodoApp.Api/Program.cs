@@ -1,6 +1,5 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.ComponentModel.DataAnnotations;
@@ -19,9 +18,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.Configure<AppOptions>(builder.Configuration.GetSection("app"));
 builder.Services.AddSingleton<ErrorHandlerMiddleware>();
 builder.Services.AddHostedService<HostedServiceTest>();
-builder.Services.AddExceptionHandler<BadRequestExceptionHandler>();
-builder.Services.AddExceptionHandler<InternalErrorExceptionHandler>();
-builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
@@ -33,12 +29,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthorization();
-app.UseExceptionHandler();
+app.UseMiddleware<ErrorHandlerMiddleware>();
 app.MapControllers();
 app.MapGet("/api/hc", (IOptionsMonitor<AppOptions> options) => options.CurrentValue);
 app.MapPost("/api/hc", (int id) => Results.Ok($"Resource Added {id}"));
-app.MapGet("/api/bad-request", () => { throw new InvalidOperationException("Should return BadRequest 400 status"); });
-app.MapGet("/api/internal-error", () => { throw new Exception("Should return InternalErrorServer 500 status"); });
 
 app.Run();
 
@@ -102,69 +96,5 @@ public class StudentWithFluentValidationValidator : AbstractValidator<StudentWit
         RuleFor(s => s.Age).GreaterThan(0)
                            .LessThan(100)
                            .NotNull();
-    }
-}
-
-class BadRequestExceptionHandler : IExceptionHandler
-{
-    private readonly ILogger<BadRequestExceptionHandler> _logger;
-
-    public BadRequestExceptionHandler(ILogger<BadRequestExceptionHandler> logger)
-    {
-        _logger = logger;
-    }
-
-    public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
-    {
-        if (exception is not InvalidOperationException badRequestException)
-        {
-            return false;
-        }
-
-        _logger.LogError(
-            badRequestException,
-            "Exception occurred: {Message}",
-            badRequestException.Message);
-
-        var problemDetails = new
-        {
-            Status = StatusCodes.Status400BadRequest,
-            Detail = badRequestException.Message
-        };
-
-        httpContext.Response.StatusCode = problemDetails.Status;
-
-        await httpContext.Response
-            .WriteAsJsonAsync(new Dictionary<string, string>() { { "Error", problemDetails.Detail } }, cancellationToken);
-
-        return true;
-    }
-}
-
-class InternalErrorExceptionHandler : IExceptionHandler
-{
-    private readonly ILogger<InternalErrorExceptionHandler> _logger;
-
-    public InternalErrorExceptionHandler(ILogger<InternalErrorExceptionHandler> logger)
-    {
-        _logger = logger;
-    }
-
-    public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
-    {
-        _logger.LogError(
-            exception, "Exception occurred: {Message}", exception.Message);
-
-        var problemDetails = new
-        {
-            Status = StatusCodes.Status500InternalServerError,
-            Title = "Server error"
-        };
-
-        httpContext.Response.StatusCode = problemDetails.Status;
-        await httpContext.Response
-            .WriteAsJsonAsync(new Dictionary<string, string>() { { "Error", problemDetails.Title } }, cancellationToken);
-
-        return true;
     }
 }
